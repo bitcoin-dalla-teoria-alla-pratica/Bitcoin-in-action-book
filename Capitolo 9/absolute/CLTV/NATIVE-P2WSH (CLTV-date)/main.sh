@@ -143,16 +143,16 @@ printf "\n \e[41m ######### ALERT #########\e[0m\n\n"
 echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime'))" and the transaction is valid from "$(tohuman.py $TIME) "\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
+
 #btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
 
 printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
-secs=$((1 * 60))
+secs=$((1 * 30))
 while [ $secs -gt 0 ]; do
    printf "$secs\n"
    sleep 1
    : $((secs--))
 done
-
 printf "\n \e[45m ######### mine 11 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 11 $ADDR_MITT
 

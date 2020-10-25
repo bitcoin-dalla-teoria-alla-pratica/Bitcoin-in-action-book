@@ -53,6 +53,10 @@ do
   cat compressed_public_key_$i.txt
 done
 
+# 0xB1 = OP_CHECKLOCKTIMEVERIFY
+# 0x75 = OP_DROP
+# 0x51 = OP_1
+
 # Witness script: 1589969726(now+20) OP_DROP OP_CHECKLOCKTIMEVERIFY OP_1 <Public Key hash> <Public Key hash> <Public Key hash> 3 OP_CHECKMULTISIG
 # Witness program: SHA256(witness script)
 # scriptPubKey: OP_0 <witness program>
