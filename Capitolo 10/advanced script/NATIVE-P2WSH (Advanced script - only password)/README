@@ -1,0 +1,206 @@
+Non volendo mettere troppa carne al fuoco proponiamo come primo esercizio uno script che non va utilizzato in mainnet in quanto risulta possibile un attacco per sottrarne i fondi.
+
+Rimane pero' un esempio ludico valido in quanto ottimo per iniziare a utilizzare OP_IF senza combinarlo con altri OP_CODE complessi.
+
+
+Quello che vogliamo realizzare e' uno script che permette di sbloccare i fondi, invece che con una chiave privata, con due semplici password.
+
+Lo script che andremo ad utilizzare e' il seguente
+
+OP_IF
+	OP_SHA256
+	<SHA256(secret)>
+	OP_EQUAL
+OP_ELSE
+	OP_SHA1
+	<SHA256(secret)>
+	OP_EQUAL
+OP_ENDIF
+
+scegliamo quindi due password a caso :) "satoshi" e "nakamoto" e lo script risultata sara'
+NB: la scelta di usare SHA256 per la prima password e SHA1 per la seconda e' fatta a puro scopo ludico.
+
+
+OP_IF
+	OP_SHA256
+	da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f
+	OP_EQUAL
+OP_ELSE
+	OP_SHA1
+	5ce6cb201176d8f1ca6abb9e9a643f6248af58cb
+	OP_EQUAL
+OP_ENDIF
+
+a questo punto la maggior parte di libri e guide sull'argomento termina dicendovi che bastera' usare
+
+TRUE
+satoshi
+
+o
+
+FALSE
+nakamoto
+
+come valori nello stack per sbloccare i fondi :)
+
+Ovviamente e' vero che tali combinazioni di valori sbloccano i fondi ma trasformare la teoria qua sopra in due transazioni pratiche (una che blocca e una che spende) non e' un passaggio immediato.
+
+Come prima cosa la sintassi
+
+	OP_SHA256
+	da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f
+
+non e' completa perche', per tutto cio' che non e' OP_CODE, bisogna indicarne la lunghezza.
+
+Lo script risultante diventa
+OP_IF
+	OP_SHA256
+	20da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f
+	OP_EQUAL
+OP_ELSE
+	OP_SHA1
+	145ce6cb201176d8f1ca6abb9e9a643f6248af58cb
+	OP_EQUAL
+OP_ENDIF
+
+dove il 20 esadecimale, anteposto al digest SHA256 della prima password, indica che seguira' una serie di caratteri lunga 0x20 ovvero i 32 caratteri dello sha256.
+Stesso discorso per il 14 esadecimale che indica, 0x14, la lunghezza dello sha1 che e' 20 caratteri.
+
+Poi si procede alla trasformazione di tutti gli OP_CODE nel loro valore esadecimale ottenendo
+
+63a820da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f8767A7208eef2960bec338415417c52eec417ecbf6b218bf0dba3afb7862391c1db1e29a8768
+
+dove
+	- 63 e' OP_IF
+	- a8 e' OP_SHA256
+	- 20 e' la lunghezza di sha256("satoshi")
+	- da2..26f e' sha256("satoshi")
+	- 87 e' OP_EQUAL
+	- 67 e' OP_ELSE
+	- a7 e' OP_SHA1
+	- 14 e' la lunghezza di sha1("nakamoto")
+	- 5ce..8cb e' sha1("nakamoto")
+	- 87 e' OP_EQUAL
+	- 68 e' OP_ENDIF
+
+Questo che abbiamo appena realizzato e' il witness script e ci e' sufficiente per bloccare una UTXO.
+
+Per bloccare una UTXO su un determinato witness script bisogna ottenere il witness program, passaggio molto semplice, si tratta di applicare SHA256 al valore esadecimale del witness script.
+
+in teoria
+
+SHA256(63a820da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f8767A7208eef2960bec338415417c52eec417ecbf6b218bf0dba3afb7862391c1db1e29a8768)
+
+in pratica
+
+WITNESS_SCRIPT=63a820da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f8767A7208eef2960bec338415417c52eec417ecbf6b218bf0dba3afb7862391c1db1e29a8768
+WITNESS_PROGRAM=`printf $WITNESS_SCRIPT | xxd -r -p | openssl sha256 | sed 's/^.* //'`
+
+ottenendo 53214c80b3eee2fe2a01f32092a148cea79fe3464a34147ff9aa9786c467c926
+
+adesso si prosegue costruendo il bench32, gia' visto nei capitoli precedenti, e inoltrando la transazione.
+
+
+Come dicevamo l'UTXO di questa transazione non e' vincolata ad una specifica chiave pubblica ma bensi' alla conosceza della logica del witness script e delle password che ne fanno terminare l'esecuzione con il valore 1 sullo stack (condizione necessaria per sbloccare i fondi al termine dell'esecuzione di un qualsiasi Bitcoin Script).
+
+Vediamo quindi come costruire una transazione che sfrutta tale UTXO.
+
+La prima parte che dobbiamo comporre e' il witness field.
+Come detto in precedenza il witness field e' un array di byte array, per semplicita' possiamo pensarlo come un semplice array di elementi generici.
+Tutti gli elementi, escluso l'ultimo, saranno pushati direttamente nello stack.
+L'ultimo elemento e' il witness script contenente gli OP_CODE da eseguire.
+
+Quindi nel caso del nostro script, per spendere la UTXO, il witness field e' composto da
+
+- TRUE
+- satoshi
+- {witness script}
+
+oppure
+
+- FALSE
+- nakamoto
+- {witness script}
+
+dove, prendiamo il primo caso, TRUE e "satoshi" sono i valori che consentono di entrare nella condizione dell'OP_IF e generare uno SHA256 uguale a quello che si aspetta OP_EQUAL.
+
+Anche qui, la trasformazione da teoria a pratica non e' immediata, vediamo come procedere
+
+1) Nello stack si puo' pushare solo valori esadecimali.
+Quindi "satoshi" non e' possibile inserirlo.
+
+Usiamo xxd per trasformarlo in un valore esadecimale
+
+printf "nakamoto" | xxd -ps
+
+"nakamoto" diventa "6e616b616d6f746f"
+
+2) Nello stack devo indicare la lunghezza dei valori esadecimali che pusho.
+
+Abbiamo gia' visto in precedenza ma ripetiamo :)
+
+Per pushare "6e616b616d6f746f" devo prefissare con la lunghezza.
+In questo caso sono 16 caratteri quindi, in esadecimane, la lunghezza e' 0x10
+
+
+3) L'ordine degli elementi nel witness field conta e come!
+
+I valori del witness field, escluso l'ultimo, vengono pushati nello stack.
+Questo significa che il primo valore del witness field diventa quello piu' in profondita' nello stack.
+
+Quindi dire che nello stack serve inserire
+
+- FALSE
+- nakamoto
+
+e' corretto ma nel witness field l'ordine finale sara'
+
+- nakamoto
+- FALSE
+- {witness script}
+
+facile ma non ovvio!
+
+4) FALSE e TRUE sullo stack che valori hanno?
+
+FALSE sullo stack non e' 00 ma null, btdeb lo rappresenta come 0x
+
+TRUE sullo stack e' 0x01.
+
+Quindi per pushare FALSE basta indicare 00 ma per pushare TRUE bisogna utilizzare 0101.
+
+Si usa 0101 perche' il primo 01 indica che si sta pushando 1 byte sullo stack ed il successivo 01 e' il byte che appunto rapresenta TRUE.
+
+Per FALSE basta 00 perche' sta ad indicare "pusha un array vuoto di byte nello stack", ovvero 0x.
+
+
+Avendo presenti queste quattro regoline, possimo costruire i due witness field in grado di sbloccare la UTXO.
+
+
+Con password nakamoto
+
+03106e616b616d6f746f009263a820da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f8767A7208eef2960bec338415417c52eec417ecbf6b218bf0dba3afb7862391c1db1e29a8768
+
+con password satoshi
+
+030e7361746f73686901019263a820da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f8767A7208eef2960bec338415417c52eec417ecbf6b218bf0dba3afb7862391c1db1e29a8768
+
+dove
+
+- 03 indica che ci sono tre elementi nel witness field
+- 10 o 0e sono la lunghezza del valore esadecimale delle password
+- 6e616b616d6f746f o 7361746f736869 sono l'encoding esadecimale delle password
+- 92 e' la lunghezza del witness script
+- 63a...768 e' il witness script
+
+per costruire la transazione finale serve un altro piccolo sforzo ma del quale siamo abbiamo gia' avuto modo nei capitoli precedenti di approfondire.
+Si prefissa tutto con TX_VERSION, SEGWIT_MARKER, SEGWIT_FLAG, INPUT INDEX, SEQUENCE.
+Si suffigge con la LOCKTIME_PART.
+
+Ottenendo
+
+[raw tx finale]
+
+[raw tx decodificata]
+
+A questo punto non ci rimane che inviare la transazione!

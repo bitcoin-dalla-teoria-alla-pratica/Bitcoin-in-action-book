@@ -1,0 +1,52 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2512
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww20200\viewh12140\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf0 \CocoaLigature0 hashblocco 77e0444845138a2929d9f392f55d180ce1eae2b771854da92ee7c42ea8828fb0\
+coinbase 70625bba02a6894dc3d8c82aa5aaf01105ef68ef724af0cfb33d16c7845c09d4\
+risultato aa21a9edaf860117dbca2b3b59466d574d2e15ebf479899972cd7001d561ca93069aab2f\
+\
+\
+1 TRANSAZIONE\
+\
+TXID                                                             wtxid                                                              girato\
+70625bba02a6894dc3d8c82aa5aaf01105ef68ef724af0cfb33d16c7845c09d4 7aeb8626c974cc34708d8b54f9554f67f2238fede23a058d117b03b0b16e450c   0c456eb1b0037b118d053ae2ed8f23f2674f55f9548b8d7034cc74c92686eb7a\
+91e4ccd77cfcb58158ea5fcd46a3c00f8736c5ae50463a1bac0e9b8df795a691 0c45f0723de1929961924ca273730e97d60bfbac513b4312f3e9576db7edccf4   f4ccedb76d57e9f312433b51acfb0bd6970e7373a24c92619992e13d72f0450c\
+\
+\
+H1=0000000000000000000000000000000000000000000000000000000000000000\
+H2=f4ccedb76d57e9f312433b51acfb0bd6970e7373a24c92619992e13d72f0450c\
+witness_reserved_value=0000000000000000000000000000000000000000000000000000000000000000\
+\
+RES1=$(printf $H1$H2 | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+witness_root_hash=$(printf $RES1$witness_reserved_value | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+#MKR=$(printf $RES1 | tac -rs ..)\
+echo $witness_root_hash\
+\
+#MKR2=$(printf $MKR | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+#MKR=$(printf $MKR2 | tac -rs ..)\
+#echo $MKR\
+\
+---- OK ----\
+\
+H0=0000000000000000000000000000000000000000000000000000000000000000\
+H1=d7dadae1f07cb379e7812391eecaba37fdb41a23484482e9a19de94bebacbe66\
+H2=77a5d2534461e962ad57c7ca62138afdfd3f66eb4855e28954e15459e237cbae\
+H3=568477ffa3304d86356b53214d93abc8011fe92f1eab6cd85adfcb89c51b215b\
+\
+RES1=$(printf $H0$H1 | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+echo $RES1\
+\
+RES2=$(printf $H2$H3 | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+echo $RES2\
+\
+RES3=$(printf $RES1$RES2 | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+echo $RES3\
+\
+RES4=$(printf $RES3$H0 | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '\{print $1\}')\
+echo $RES4\
+\
+-------}

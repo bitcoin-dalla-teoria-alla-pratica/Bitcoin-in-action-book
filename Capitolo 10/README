@@ -1,0 +1,57 @@
+Introduzione
+
+Adesso che abbiamo visto i vari metodi di firma e le condizioni temporali che si possono utilizzare e' il momento di migliorare la programmabilita' dei nostri script.
+
+Come ogni linguaggio che si rispetti Bitcoin Script permette l'utilizzo di condizioni per deviare arbitrariamente il flusso logico.
+
+Come potete immaginare le OP_CODE che andremo a trattare sono OF_IF, OP_ELSE, OP_VERIFY, nella wiki le trovate, perl'appunto sotto la categoria "Flow control" (https://en.bitcoin.it/wiki/Script#Flow_control).
+
+Prima di affrontare la pratica e' importante tenere a mente che, in Script, ed in particolare con SegWit si ha una suddivisione, inizialmente poco intuitiva, ma vedrete molto comoda, fra lo script che racchiude la logica ed i valori che esso utilizza per essere eseguito.
+
+Facciamo un esempio teorico: somma di due numeri solo se sono uguali, altrimenti torna 0.
+
+Con un linguaggio di programmazione classico avremo
+
+function somma_se_uguali(add1, add2) {
+	if (add1 == add2) {
+		return add1 + add2
+	}
+
+	return 0
+}
+
+e fin qui tutto come ci si aspettava.
+
+L'equivalente funzione scritta in Bitcoin Script sara'
+
+OP2_DUP
+OP_EQUAL
+OP_IF
+	OP_ADD
+OP_ELSE
+	OP_0
+
+la prima cosa che si nota e' che non viene definita una funzione ed i suoi parametri.
+
+Questo perche' possiamo considerare ogni Bitcoin Script una funzione.
+I suoi parametri sono gli elementi che vengono pushati nello stack prima dell'esecuzione della funzione.
+
+Quindi il witness field risultante per eseguire somma_se_uguali, nella sua versione Bitcoin Script, sara'
+
+[
+	2,
+	2,
+	"OP2_DUP OP_EQUAL OP_IF OP_ADD OP_ELSE OP_0"
+]
+
+dove i primi due numeri sono i valori che saranno pushati nello stack prima di cominciare ad eseguire gli OP_CODE.
+
+In questo esempio l'operazione di OP2_DUP si rende necessaria perche' in Bitcoin Script non esiste il concetto di variabile, gli unici valori che possiamo maneggiare sono quelli presenti sullo stack e la maggior parte degli OP_CODE quando ne utilizza uno lo rimuove.
+
+Per esempio OP_EQUAL rimuove i primi due valori dallo stack e rimette in cima allo stack TRUE o FALSE.
+
+
+Dopo questa rapida introduzione passiamo all'utilizzo pratico di queste OP_CODE che, assieme ai timelocks, permettono di creare multisig interessanti e fondamentali per collegarsi al Lighting Network!
+
+
+
