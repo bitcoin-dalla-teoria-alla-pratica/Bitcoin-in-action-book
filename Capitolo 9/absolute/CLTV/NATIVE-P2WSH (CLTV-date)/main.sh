@@ -9,7 +9,7 @@ fi
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
 #create address
-sh create_address_p2wsh.sh
+bash create_address_p2wsh.sh
 
 printf  "\n\n \e[45m ######### Mine 101 blocks and get reward#########\e[0m"
 
@@ -69,13 +69,13 @@ echo "SEQUENCE: "$SEQUENCE
 HASH_SEQUENCE=$(printf $SEQUENCE | xxd -r -p | sha256sum -b | xxd -r -p | sha256sum -b | awk '{print $1}')
 echo "HASH_SEQUENCE: "$HASH_SEQUENCE
 
-SCRIPTCODELENGTH=$(char2hex.sh $(cat witness_script.txt | wc -c))
+SCRIPTCODELENGTH=$(bash char2hex.sh $(cat witness_script.txt | wc -c))
 SCRIPTCODE=$SCRIPTCODELENGTH$(cat witness_script.txt)
 
 echo "SCRIPTCODE: "$SCRIPTCODE
 
 #convert bitcoin unit to satoshi unit
-AMOUNT_TO_SPEND=$(btc2sat.sh $AMOUNT_TO_SPEND)
+AMOUNT_TO_SPEND=$(bash btc2sat.sh $AMOUNT_TO_SPEND)
 echo "AMOUNT: "$AMOUNT_TO_SPEND
 
 OUTPUT=$(printf $TX_DATA | cut -c 111-156)
@@ -93,7 +93,7 @@ SIGHASH=01000000
 echo "SIGHASH: "$SIGHASH
 
 #convert bitcoin unit to satoshi unit. The total UTXO amount
-SIG_AMOUNT=$(btc2sat.sh $AMOUNT_UTXO)
+SIG_AMOUNT=$(bash btc2sat.sh $AMOUNT_UTXO)
 
 #Frankenstein, create transaction
 WITNESS_V0_DIGEST=$TX_VERSION$HASH_PREV_OUT$HASH_SEQUENCE$OUTPOINT$SCRIPTCODE$SIG_AMOUNT$SEQUENCE$OUTPUT_HASH$LOCKTIME_PART$SIGHASH
@@ -110,12 +110,12 @@ SIGNATURE="${SIGNATURE}01"
 echo $SIGNATURE > signature.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh >> /dev/null
+bash fix_signature.sh >> /dev/null
 SIGNATURE=$(cat signature.txt)
 
 printf  "\n \e[42m ######### Create Sign Transaction #########\e[0m\n\n"
 
-SIGNATURELENGTH=$(char2hex.sh $(echo $SIGNATURE | wc -c))
+SIGNATURELENGTH=$(bash char2hex.sh $(echo $SIGNATURE | wc -c))
 
 TX_VERSION=$(printf $TX_DATA | cut -c 1-8) #nVersion
 SEGWIT_MARKER="00"
@@ -127,7 +127,7 @@ SECOND_PART=$(printf $TX_DATA | cut -c 93-156) #number output, value, scriptPubK
 
 #Witness items
 WITNESS_SCRIPT=$(cat witness_script.txt)
-WITNESS_SCRIPT_LENGTH=$(char2hex.sh $(echo $WITNESS_SCRIPT | wc -c))
+WITNESS_SCRIPT_LENGTH=$(bash char2hex.sh $(echo $WITNESS_SCRIPT | wc -c))
 WITNESS_FIELD=$(printf "00"$SIGNATURELENGTH$SIGNATURE$WITNESS_SCRIPT_LENGTH$WITNESS_SCRIPT)
 WITNESS_FIELD_COUNT="03"
 
