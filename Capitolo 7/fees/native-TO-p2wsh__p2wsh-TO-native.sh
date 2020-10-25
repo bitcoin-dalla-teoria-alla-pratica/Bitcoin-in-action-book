@@ -13,7 +13,7 @@ ADDR_P2SH_P2WPKH=`bitcoin-cli getnewaddress "" "p2sh-segwit"`
 
 bitcoin-cli generatetoaddress 101 $ADDR_P2SH_P2WPKH_NATIVE_1 >> /dev/null
 
-printf "\n\n \e[107m ######### Coinbase -> P2WPKH Native -> P2SH-P2WSH  #########\e[0m\n\n"
+printf "\n\n \e[104m ######### Coinbase -> P2WPKH Native -> P2SH-P2WSH  #########\e[0m\n\n"
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_P2SH_P2WPKH_NATIVE_1'"]'`
 PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_NATIVE_1`
 
@@ -43,7 +43,7 @@ expr "byte: "$(expr `printf $TX_SIGNED | wc -c` / 2)
 
 bitcoin-cli generatetoaddress 6 $ADDR_P2SH_P2WPKH_NATIVE_1 >> /dev/null
 
-printf "\n\n \e[107m ######### P2SH-P2WSH -> P2WPKH Native  #########\e[0m\n\n"
+printf "\n\n \e[104m ######### P2SH-P2WSH -> P2WPKH Native  #########\e[0m\n\n"
 UTXO=`bitcoin-cli listunspent 1 6 '["'$ADDR_P2SH_P2WPKH'"]'`
 PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH`
 

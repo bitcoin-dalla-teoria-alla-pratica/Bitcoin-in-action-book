@@ -40,4 +40,4 @@ __pycache__/
 *$py.class
 *.swp
 Bitcoin
-PSD BTC2
+images/*.psd
