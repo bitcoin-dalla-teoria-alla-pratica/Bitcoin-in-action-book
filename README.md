@@ -1,4 +1,4 @@
-# SATOSHI WANTS YOU
+# Bitcoin in Action
 
 				                  ,.=ctE55ttt553tzs.,
 				             ,,c5;z==!!::::  .::7:==it3>.,
@@ -26,5 +26,3 @@
 				          "tz3=.                      ..c5t32^
 				             "=zz3==...         ...=t3z13P^
 				                 `*=zjzczIIII3zzztE3>*^`
-
-TODO: come impostare i parametri $PATH delle utility
