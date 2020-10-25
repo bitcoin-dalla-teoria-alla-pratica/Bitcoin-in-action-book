@@ -38,10 +38,10 @@ echo "\n SIGHASH_ALL: `printf $SIGHASH_ALL`"
 
 
 #printf  "\n\n \e[34m ######### Convert s to base10 ######### \e[0m\n\n"
-s=`echo "ibase=16; $(printf $S  | tr '[:lower:]' '[:upper:]')" | bc |  tr -d '\n' | tr -d '\' | awk '{print $1}'`
+s=`echo "ibase=16; $(printf $S  | tr '[:lower:]' '[:upper:]')" | bc |  tr -d '\n' | tr -d '\\' | awk '{print $1}'`
 
-N=`echo "ibase=16;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141" | bc  |  tr -d '\n' | tr -d '\' | awk '{print $1}'`
-N2=`echo "$N/2" | bc -l |  tr -d '\n' | tr -d '\' | awk '{print $1}'`
+N=`echo "ibase=16;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141" | bc  |  tr -d '\n' | tr -d '\\' | awk '{print $1}'`
+N2=`echo "$N/2" | bc -l |  tr -d '\n' | tr -d '\\' | awk '{print $1}'`
 
 #echo $s
 #echo "/n"
@@ -52,7 +52,7 @@ if (( $(bc <<< "$s > $N2") ));
 then
 
 #subtract
-s=`echo "$N - $s" | bc |  tr -d '\n' | tr -d '\' | awk '{print $1}'`
+s=`echo "$N - $s" | bc |  tr -d '\n' | tr -d '\\' | awk '{print $1}'`
 
 #convert to base10
 s=`echo "obase=16;$s" | bc`
