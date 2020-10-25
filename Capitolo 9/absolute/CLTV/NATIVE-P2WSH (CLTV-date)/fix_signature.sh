@@ -47,6 +47,11 @@ N2=$(echo "$N/2" | bc -l |  tr -d '\n' | tr -d '\\' | awk '{print $1}')
 #echo "/n"
 #echo $N2
 
+s_N2_BC_OP=$(printf "$s > $N2")
+s_GT_N2=$(bc <<< $s_N2_BC_OP)
+
+echo "s is greater than N2: $s_GT_N2"
+
 #check if s is greater than N2
 if (( $(bc <<< "$s > $N2") ));
 then
