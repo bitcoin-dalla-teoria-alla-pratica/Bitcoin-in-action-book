@@ -1,6 +1,6 @@
 #!/bin/sh
-ABSOLUTE_PATH="/Users/barno/Documents/bizantino/Bitcoin"
-if [ -z "$ABSOLUTE_PATH" ]
+ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
+if [ ! -d $ABSOLUTE_PATH ]
 then
       echo "\$ABSOLUTE_PATH Set your Absolute Path"
       exit

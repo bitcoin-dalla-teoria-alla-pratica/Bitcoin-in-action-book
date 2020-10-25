@@ -1,10 +1,10 @@
 #!/bin/sh
 printf  "\e[101m######### TRANSACTION MALLEABILITY #########\e[0m \n"
 
-ABSOLUTE_PATH="/Users/barno/Documents/bizantino/Bitcoin"
-if [ -z "$ABSOLUTE_PATH" ]
+ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
+if [ ! -d $ABSOLUTE_PATH ]
 then
-      echo "\$ABSOLUTE_PATH Attenzione il percorso del tuo nodo non è settato"
+      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
       exit
 fi
 

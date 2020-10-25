@@ -1,8 +1,8 @@
 #!/bin/sh
-ABSOLUTE_PATH="/Users/barno/Documents/bizantino/Bitcoin"
-if [ -z "$ABSOLUTE_PATH" ]
+ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
+if [ ! -d $ABSOLUTE_PATH ]
 then
-      echo "\$ABSOLUTE_PATH Please set your ABSOLUTE PATH"
+      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
       exit
 fi
 
