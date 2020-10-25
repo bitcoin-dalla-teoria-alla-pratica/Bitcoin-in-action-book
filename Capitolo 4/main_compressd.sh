@@ -6,7 +6,7 @@ then
       exit
 fi
 
-sh create_p2sh_address.sh
+sh create_p2sh_address_compressed.sh
 
 #Stop, clean regtest, restart!
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
@@ -37,14 +37,14 @@ bitcoin-cli generatetoaddress 6 $ADDR_MITT
 printf  "\n \e[31m######### spend from P2SH #########\e[39m \n"
 AMOUNT=`bitcoin-cli getrawtransaction $TXID 2 | jq -r '.vout[0].value-0.0001'`
 VOUT=0
-PK1=`cat uncompressed_private_key_WIF_1.txt`
-PK2=`cat uncompressed_private_key_WIF_2.txt`
-PK3=`cat uncompressed_private_key_WIF_3.txt`
+#PK1=`cat uncompressed_private_key_WIF_1.txt`
+#PK2=`cat uncompressed_private_key_WIF_2.txt`
+#PK3=`cat uncompressed_private_key_WIF_3.txt`
 
 # With compressed key. You must change redeem script in create_p2sh_address.sh
-#PK1=`cat compressed_private_key_WIF_1.txt`
-#PK2=`cat compressed_private_key_WIF_2.txt`
-#PK3=`cat compressed_private_key_WIF_3.txt`
+PK1=`cat compressed_private_key_WIF_1.txt`
+PK2=`cat compressed_private_key_WIF_2.txt`
+PK3=`cat compressed_private_key_WIF_3.txt`
 
 REDEEM=`cat redeem_script.txt`
 

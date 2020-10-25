@@ -66,5 +66,7 @@ TX_DATA_SIGNED=$FIRST_PART$SCRIPTSIGLENGTH$SCRIPTSIG$LAST_PART
 printf  "\n\n \e[31m ######### Send transaction  #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
+#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+
 printf "\n\n \e[105m ######### mine 6 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 6 $ADDR_P2SH
