@@ -7,4 +7,4 @@ ts = int(sys.argv[1])
 
 human = datetime.datetime.fromtimestamp(ts)
 
-print(str(human) + " " + "/".join(time.tzname), end='')
+print(str(human) + " " + "/".join(time.tzname))

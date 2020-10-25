@@ -15,4 +15,4 @@ now = int(ts)
 
 forward = plus + now
 
-print(forward, end='')
+print(forward)
