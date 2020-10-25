@@ -57,7 +57,7 @@ if (( $(bc <<< "$s > $N2") ));
 then
 
 #subtract
-s=`echo "$N - $s" | bc |  tr -d '\n' | tr -d '\\' | awk '{print $1}'`
+s=$(echo "$N - $s" | bc |  tr -d '\n' | tr -d '\\' | awk '{print $1}')
 
 #convert to base10
 s=`echo "obase=16;$s" | bc`
