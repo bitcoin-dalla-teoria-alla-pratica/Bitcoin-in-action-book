@@ -14,18 +14,21 @@ ADDR_DEST=`bitcoin-cli getnewaddress "malleability destinatario" "legacy"`
 
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
 
-TXID=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].txid')
+TXID_UNSPENT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].txid')
 VOUT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].vout')
 AMOUNT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].amount-0.001')
 
 PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
 
-printf  "\n \e[31m######### TX_DATA #########\e[0m \n"
-TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]'`
+printf  "\n \e[31m######### TX_DATA UNSIGNED #########\e[0m \n"
+TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID_UNSPENT'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]'`
 printf $TX_DATA
 
 printf  "\n\n \e[31m######### Sign the transaction #########\e[0m \n"
 TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+
+printf  "\n \e[31m######### TX_DATA SIGNED #########\e[0m \n"
+printf $TX_DATA_SIGNED
 
 bitcoin-cli decoderawtransaction $TX_DATA_SIGNED | jq
 printf  "\n\n \e[31m######### TX ID #########\e[0m \n"
@@ -55,3 +58,5 @@ printf "TXID transaction malleability\n"$TXID_MALL
 
 printf  "\n\n \e[31m######### Send transaction with extra Op code #########\e[0m \n"
 bitcoin-cli sendrawtransaction $TXMALL
+
+#btcdeb --tx=$TXMALL --txin=$(bitcoin-cli getrawtransaction $TXID_UNSPENT)
