@@ -165,7 +165,7 @@ printf "\n\e[32m ######### Decode sign transaction #########\e[0m\n\n"
 echo $TX_DATA_SIGNED
 bitcoin-cli decoderawtransaction $TX_DATA_SIGNED | jq
 
-#use 'sh second_case_2-3.sh debug=1' to activate the stack.
+#use 'sh second_case_2-3.sh debug' to activate the stack.
 if [[ -n $1 ]] ; then
   btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
 fi
