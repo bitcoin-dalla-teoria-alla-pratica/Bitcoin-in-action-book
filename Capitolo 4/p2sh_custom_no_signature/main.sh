@@ -1,6 +1,4 @@
 #!/bin/sh
-
-#!/bin/sh
 ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
 if [ ! -d $ABSOLUTE_PATH ]
 then
@@ -39,7 +37,6 @@ bitcoin-cli generatetoaddress 6 $ADDR_MITT
 printf  "\n \e[31m######### spend from P2SH #########\e[39m \n"
 AMOUNT=`bitcoin-cli getrawtransaction $TXID 2 | jq -r '.vout[0].value-0.0001'`
 VOUT=0
-
 REDEEM=`cat redeem_script.txt`
 
 #add opcode BIP0016
@@ -61,7 +58,11 @@ TX_2=`printf $TX_DATA | cut -c 85-170`
 echo $TX_1$TX_SCRIPTSIG$TX_2
 
 printf  "\n \e[31m######### Send transaction #########\e[0m\n\n"
-bitcoin-cli sendrawtransaction $TX_1$TX_SCRIPTSIG$TX_2
+TX_DATA=$(bitcoin-cli sendrawtransaction $TX_1$TX_SCRIPTSIG$TX_2)
+
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$(bitcoin-cli getrawtransaction $TX_DATA) --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf  "\n \e[31m######### Mint 6 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 6 $ADDR_MITT
