@@ -97,7 +97,9 @@ bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
 echo "The last mediantime is "$(gdate --date="@$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime')")"\n"
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf "\n\n \e[105m ######### mine 6 blocks #########\e[0m\n\n"
 #bitcoin-cli generatetoaddress 6 $ADDR_MITT

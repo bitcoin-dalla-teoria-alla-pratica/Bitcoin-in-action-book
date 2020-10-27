@@ -30,7 +30,9 @@ SCRIPTPUBKEY="A914"`cat scriptPubKey.txt`"87"
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]')
 TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","redeemScript":"'$REDEEM'"}]'  | jq -r '.hex')
 
-#btcdeb --tx=$TX_SIGNED --txin=$TXIN
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$TXIN
+fi
 
 printf  "\n\n \e[31m ######### Send transaction  #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED

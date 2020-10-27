@@ -40,7 +40,9 @@ TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid"
 
 bitcoin-cli decoderawtransaction $TX_SIGNED | jq
 
-#btcdeb --tx=$TX_SIGNED --txin=$TXIN
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$TXIN
+fi
 
 printf  "\n\n \e[31m ######### Send transaction  #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED

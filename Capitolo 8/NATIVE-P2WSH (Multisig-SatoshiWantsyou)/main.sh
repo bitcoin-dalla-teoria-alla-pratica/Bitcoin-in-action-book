@@ -141,7 +141,10 @@ printf "\n\e[32m ######### Decode sign transaction #########\e[0m\n\n"
 echo $TX_DATA_SIGNED
 bitcoin-cli decoderawtransaction $TX_DATA_SIGNED | jq
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+#sh main.sh satoshiWantsYou debug
+if [[ -n $2 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf  "\n\e[32m ######### Send Transaction #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED

@@ -37,7 +37,10 @@ WITNESS_SCRIPT=$(cat witness_script.txt)
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]')
 TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK1'","'$PK2'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"witnessScript":"'$WITNESS_SCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
-#btcdeb --tx=$TX_SIGNED --txin=$TXIN
+
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$TXIN
+fi
 
 bitcoin-cli decoderawtransaction $TX_SIGNED | jq
 

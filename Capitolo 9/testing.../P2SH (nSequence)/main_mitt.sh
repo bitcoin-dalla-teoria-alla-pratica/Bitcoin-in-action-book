@@ -110,7 +110,9 @@ printf "\n \e[41m ######### Current block height "$(bitcoin-cli getchaintips | j
 printf  "\n\n \e[31m ######### Send transaction  #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf "\n\n \e[105m ######### mine 99 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 99 $ADDR_MITT

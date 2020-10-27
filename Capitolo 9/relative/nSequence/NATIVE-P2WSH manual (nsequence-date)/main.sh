@@ -171,4 +171,8 @@ CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -
 echo "The difference between bestblock's mediantime and previous block's mediantime is: "$(expr $CURRENT_MEDIANTIME - $PREVIOUS_MEDIAN_TIME)" The result must be >= "$(echo $SEC)
 bitcoin-cli sendrawtransaction $TX_SIGNED
 bitcoin-cli decoderawtransaction $TX_SIGNED | jq
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
+

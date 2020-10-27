@@ -97,7 +97,10 @@ bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
 printf "\n \e[41m ######### Le conferme del blocco da dove parte la UTXO sono: "$(bitcoin-cli getblock $(bitcoin-cli getrawtransaction $TXID 2 | jq -r '.blockhash') | jq -r '.confirmations')" e sono richieste almeno 200 #########\e[0m\n\n"
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
+
 
 printf "\n\n \e[105m ######### mine 194 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 194 $ADDR_MITT >> /dev/null

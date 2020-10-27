@@ -68,7 +68,9 @@ SCRIPTSIGLENGTH=$(char2hex.sh $(echo $SCRIPTSIG | wc -c))
 TX_DATA_SIGNED=$FIRST_PART$SCRIPTSIGLENGTH$SCRIPTSIG$LAST_PART
 echo $TX_DATA_SIGNED
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$TXIN
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$TXIN
+fi
 
 printf  "\n\n \e[31m ######### Send transaction  #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED

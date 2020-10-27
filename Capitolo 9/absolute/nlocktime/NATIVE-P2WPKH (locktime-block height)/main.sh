@@ -28,7 +28,10 @@ echo $TX_SIGNED
 
 printf "\n\n \e[41m ######### Block height < 102. Current block height:"$(bitcoin-cli getblockchaininfo | jq -r '.blocks')". Transaction is not valid #########\e[0m\n\n"
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
+
 
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 #echo $TXID

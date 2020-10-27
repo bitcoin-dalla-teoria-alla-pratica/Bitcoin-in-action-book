@@ -147,7 +147,9 @@ PREVIOUS_MEDIAN_TIME=$(bitcoin-cli getblock $(bitcoin-cli getblock $(bitcoin-cli
 MEDIANTIME_UTXO=$(bitcoin-cli getblock $(bitcoin-cli getrawtransaction $TXID 2 | jq -r '.blockhash') | jq -r '.mediantime')
 CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime')
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 echo "\n- The previous block's mediantime is: "$(tohuman.py $PREVIOUS_MEDIAN_TIME )" \n- Block UTXO's mediantime is "$(tohuman.py $MEDIANTIME_UTXO)" \n- The transaction is valid after $SEC seconds. Date:"$(tohuman.py $(forwardseconds.py $SEC $MEDIANTIME_UTXO)) " \n- bestblock's mediantime" $(tohuman.py $CURRENT_MEDIANTIME)" \n"
 printf "\n \e[41m ######### Error #########\e[0m\n\n"
@@ -178,6 +180,9 @@ CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -
 echo "The difference between bestblock's mediantime and previous block's mediantime is: "$(expr $CURRENT_MEDIANTIME - $PREVIOUS_MEDIAN_TIME)" The result must be >= "$(echo $SEC)
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
+
 
 #bitcoin-cli generatetoaddress 6 $ADDR_MITT

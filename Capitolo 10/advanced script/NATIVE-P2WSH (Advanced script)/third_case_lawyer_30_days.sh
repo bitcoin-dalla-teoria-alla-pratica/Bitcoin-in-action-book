@@ -157,7 +157,9 @@ echo "\n- The previous block's mediantime is: "$(tohuman.py $PREVIOUS_MEDIAN_TIM
 printf "\n \e[41m ######### Error #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 echo "\n ---------"
 echo "0)🏃🏃🏻‍♂️ ARE YOU IN A HURRY? Dont wait "$(echo $SEC)" seconds."
@@ -179,7 +181,9 @@ done
 printf "\n \e[45m ######### mine 11 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 11 $ADDR_MITT
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf "\n \e[42m ######### Done! #########\e[0m\n\n"
 CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime')

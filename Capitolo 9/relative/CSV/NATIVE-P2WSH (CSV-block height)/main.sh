@@ -154,6 +154,9 @@ BEST_BLOCK_HEIGHT=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r
 printf "\e[42m ######### The Best block height is: $BEST_BLOCK_HEIGHT. the transaction is valid! 💪🏻 #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
+
 
 bitcoin-cli decoderawtransaction $TX_SIGNED | jq

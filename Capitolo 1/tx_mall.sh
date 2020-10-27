@@ -59,4 +59,6 @@ printf "TXID transaction malleability\n"$TXID_MALL
 printf  "\n\n \e[31m######### Send transaction with extra Op code #########\e[0m \n"
 bitcoin-cli sendrawtransaction $TXMALL
 
-#btcdeb --tx=$TXMALL --txin=$(bitcoin-cli getrawtransaction $TXID_UNSPENT)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TXMALL --txin=$(bitcoin-cli getrawtransaction $TXID_UNSPENT)
+fi

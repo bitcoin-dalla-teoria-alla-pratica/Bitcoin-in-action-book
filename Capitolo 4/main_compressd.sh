@@ -65,7 +65,9 @@ printf  "\n \e[31m######### Sign with second private key #########\e[0m \n"
 TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_SIGNED '["'$PK2'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","redeemScript":"'$REDEEM'"}]'  | jq -r '.hex')
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-#btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf  "\n \e[31m######### Send transaction and mint 6 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 6 $ADDR_MITT

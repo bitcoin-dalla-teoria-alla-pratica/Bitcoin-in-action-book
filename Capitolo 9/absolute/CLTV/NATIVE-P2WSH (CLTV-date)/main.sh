@@ -144,7 +144,10 @@ echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli 
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
 
-#btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+#use 'sh main.sh debug=1' to activate the stack.
+if [[ -n $1 ]] ; then
+  btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
+fi
 
 printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
 secs=$((1 * 30))
