@@ -1,5 +1,5 @@
 # Bitcoin In Action
-## SegWit, Bitcoin Script & Smart Contracts
+### SegWit, Bitcoin Script & Smart Contracts
 
 
 <img src="https://i.ibb.co/PMLtdJf/Copertina-Youtube.png">
