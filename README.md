@@ -13,8 +13,8 @@ In questo repository sono raccolti:
 
 Il Libro è disponibile su:
 
-* Amazon (TODO LINK)
-* Sito ufficiale (con pagamento in bitcoin) (TODO LINK)
+* [Amazon](https://amzn.to/3pJcXj1)
+* [Sito ufficiale](https://bit.ly/38RtF9x)
 
 
 # Ho trovato un errore!
