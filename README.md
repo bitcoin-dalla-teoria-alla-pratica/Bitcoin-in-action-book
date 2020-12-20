@@ -31,4 +31,3 @@ Allora [dai un'occhiata alle linee guida per contribuire](CONTRIBUTING.md)
 - [Canale YouTube](https://www.youtube.com/BitcoinInAction)
 - [Email](mailto:corsobitcoin@gmail.com)
 - [Alessio Barnini](https://www.linkedin.com/in/alessiobarnini/)
-.
