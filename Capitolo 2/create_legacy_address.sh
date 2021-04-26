@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ "$1" = 'MAINNET' ]
 then
@@ -22,13 +22,14 @@ do
 
   #Compressed private key
   printf "\n \n 🗝 Uncompressed private key WIF $i \n"
-  C=`printf $VERSION_PREFIX_PB$(<btc_priv_$i.key) | xxd -r -p | base58 -c`
+  C=`printf $VERSION_PREFIX_PB$(cat btc_priv_$i.key) | xxd -r -p | base58 -c`
+
   printf $C"\n"
   printf $C > uncompressed_private_key_WIF_$i.txt
 
   #Compressed private key
   printf "\n \n 🗝 Compressed private key WIF $i \n"
-  C=`printf $VERSION_PREFIX_PB$(<btc_priv_$i.key)"01" | xxd -r -p | base58 -c`
+  C=`printf $VERSION_PREFIX_PB$(cat btc_priv_$i.key)"01" | xxd -r -p | base58 -c`
   printf $C"\n"
   printf $C > compressed_private_key_WIF_$i.txt
 
