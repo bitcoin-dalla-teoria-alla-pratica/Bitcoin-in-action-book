@@ -9,6 +9,7 @@ TXID=`bitcoin-cli listunspent 1 6 '["'$ADDR_MITT'"]' | jq -r '.[0].txid'`
 VOUT=`bitcoin-cli listunspent 1 6 '["'$ADDR_MITT'"]' | jq -r '.[0].vout'`
 AMOUNT=`bitcoin-cli listunspent 1 6 '["'$ADDR_MITT'"]' | jq -r '.[0].amount-0.000009'`
 
+
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
 TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]'`
 

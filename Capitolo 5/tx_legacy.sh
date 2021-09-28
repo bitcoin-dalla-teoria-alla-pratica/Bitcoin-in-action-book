@@ -10,6 +10,8 @@ sh create_legacy_address.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
+bitcoin-cli createwallet "bia"
+
 ADDR_MITT=`bitcoin-cli getnewaddress "" "legacy"`
 ADDR_DEST=`cat compressed_btc_address_1.txt`
 bitcoin-cli importprivkey `cat compressed_private_key_WIF_1.txt`
