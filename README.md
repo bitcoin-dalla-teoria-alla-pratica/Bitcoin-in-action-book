@@ -24,7 +24,6 @@ Allora [dai un'occhiata alle linee guida per contribuire](CONTRIBUTING.md)
 ### Contatti
 - [Linkedin](http://bit.ly/2H38ovs)
 - [Twitter](https://twitter.com/satoshiwantsyou)
-- [Facebook](https://www.facebook.com/satoshiwantsyou)
 - [Medium](https://bitcoin-in-action.medium.com/)
 - [Sito ufficiale](https://www.corsobitcoin.com)
 - [Video Corso](http://bitcoininaction.com/)
