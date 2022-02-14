@@ -14,20 +14,17 @@ printf "\e[32m ######### Hello, "$USER".  Are you ready for Bitcoin World? #####
 printf "\n\n \e[101m ######### Download Bitcoin core #########\e[0m\n\n"
 wget https://bitcoincore.org/bin/bitcoin-core-$VERSION/bitcoin-$VERSION-$SO.tar.gz
 
+printf "\n\n \e[101m ######### Download Hashes #########\e[0m\n\n"
+wget https://bitcoincore.org/bin/bitcoin-core-$VERSION/SHA256SUMS
+
+printf "\n\n \e[101m ######### Check the software #########\e[0m\n\n"
+sha256sum --ignore-missing --check SHA256SUMS
+
 printf "\n\n \e[101m ######### Download Checksum #########\e[0m\n\n"
 wget https://bitcoincore.org/bin/bitcoin-core-$VERSION/SHA256SUMS.asc
 
-printf "\n\n \e[42m ######### Checking Cheksum #########\e[0m\n\n"
-sha256sum --check SHA256SUMS.asc --ignore-missing
-
-printf "\n\n \e[101m ######### Download Wladimir J. van der Laan's Public key #########\e[0m\n\n"
-wget https://bitcoin.org/laanwj-releases.asc
-
-printf "\n\n \e[101m ######### Import Public key (check PGP) #########\e[0m\n\n"
-gpg --import laanwj-releases.asc
-
-printf "\n\n \e[42m ######### check the signature #########\e[0m\n\n"
-gpg --verify SHA256SUMS.asc
+printf "\n\n \e[42m ######### imports and check the signatures #########\e[0m\n\n"
+gpg --verify SHA256SUMS.asc SHA256SUMS
 
 printf "\n\n \e[101m ######### Extract the package#########\e[0m\n\n"
 tar -xvf bitcoin-$VERSION-$SO.tar.gz
