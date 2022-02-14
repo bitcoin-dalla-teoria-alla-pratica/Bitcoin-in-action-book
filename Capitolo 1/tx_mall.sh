@@ -9,6 +9,7 @@ then
 fi
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind -acceptnonstdtxn=1 && sleep 5
+bitcoin-cli createwallet "bitcoin in action"
 ADDR_MITT=`bitcoin-cli getnewaddress "malleability mittente" "legacy"`
 ADDR_DEST=`bitcoin-cli getnewaddress "malleability destinatario" "legacy"`
 

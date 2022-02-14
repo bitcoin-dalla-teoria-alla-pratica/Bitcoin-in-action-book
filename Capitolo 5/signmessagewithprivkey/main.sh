@@ -7,7 +7,7 @@ then
 fi
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-
+bitcoin-cli createwallet "bitcoin in action"
 ADDR_MITT=`bitcoin-cli getnewaddress "" "legacy"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null

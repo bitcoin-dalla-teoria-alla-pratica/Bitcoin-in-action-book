@@ -9,7 +9,7 @@ fi
 sh create_address_p2wsh_multisig.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-
+bitcoin-cli createwallet "bitcoin in action" >> /dev/null
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2WSH_MULTISIG=`cat address_P2WSH_native_multisig.txt`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`

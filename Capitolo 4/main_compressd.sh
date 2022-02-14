@@ -11,6 +11,8 @@ sh create_p2sh_address_compressed.sh
 #Stop, clean regtest, restart!
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
+bitcoin-cli createwallet "bitcoin in action"
+
 ADDR_MITT=`bitcoin-cli getnewaddress "mittente" "legacy"`
 
 #Get P2SH address

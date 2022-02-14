@@ -9,6 +9,7 @@ fi
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
+bitcoin-cli createwallet "bitcoin in action" >> /dev/null
 #create address
 sh create_address_p2wsh.sh
 

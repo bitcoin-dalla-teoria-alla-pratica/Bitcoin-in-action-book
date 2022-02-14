@@ -7,6 +7,7 @@ then
 fi
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
+bitcoin-cli createwallet "bitcoin in action" >> /dev/null
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 
 #Get P2SH-P2WPKH

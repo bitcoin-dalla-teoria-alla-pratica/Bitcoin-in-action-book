@@ -5,7 +5,7 @@ then
     VERSION=$1
     SO=$2
 else
-    VERSION=0.19.0.1
+    VERSION=22.0
     SO=osx64
 fi
 

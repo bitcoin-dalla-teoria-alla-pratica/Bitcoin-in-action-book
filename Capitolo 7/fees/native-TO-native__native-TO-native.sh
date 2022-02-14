@@ -8,6 +8,7 @@ fi
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
+bitcoin-cli createwallet "bitcoin in action" >> /dev/null
 ADDR_P2SH_P2WPKH_NATIVE_1=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_P2SH_P2WPKH_NATIVE_2=`bitcoin-cli getnewaddress "" "bech32"`
 

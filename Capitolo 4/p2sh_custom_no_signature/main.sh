@@ -11,6 +11,8 @@ sh create_p2sh_address_no_signature.sh
 #Stop, clean regtest, restart!
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
+bitcoin-cli createwallet "bitcoin in action"
+
 ADDR_MITT=`bitcoin-cli getnewaddress "mittente" "legacy"`
 
 #Get P2SH address
@@ -59,6 +61,8 @@ echo $TX_1$TX_SCRIPTSIG$TX_2
 
 printf  "\n \e[31m######### Send transaction #########\e[0m\n\n"
 TX_DATA=$(bitcoin-cli sendrawtransaction $TX_1$TX_SCRIPTSIG$TX_2)
+
+echo $TX_DATA
 
 if [[ -n $1 ]] ; then
   btcdeb --tx=$(bitcoin-cli getrawtransaction $TX_DATA) --txin=$(bitcoin-cli getrawtransaction $TXID)

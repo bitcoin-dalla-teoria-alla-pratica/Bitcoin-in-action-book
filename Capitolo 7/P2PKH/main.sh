@@ -9,7 +9,7 @@ fi
 sh create_legacy_address.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-
+bitcoin-cli createwallet "bitcoin in action" >> /dev/null
 ADDR_MITT=`bitcoin-cli getnewaddress "sender" "legacy"`
 ADDR_DEST=`bitcoin-cli getnewaddress "Recipient" "legacy"`
 

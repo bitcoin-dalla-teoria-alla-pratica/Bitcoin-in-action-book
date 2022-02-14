@@ -10,7 +10,7 @@ sh create_p2sh_address_p2pkh.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
 
-bitcoin-cli createwallet "bia"
+bitcoin-cli createwallet "bitcoin in action"
 
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2SH=`cat address_P2SH.txt`
