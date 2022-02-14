@@ -42,7 +42,7 @@ printf "\n\n \e[42m ######### Check the path #########\e[0m\n\n"
 which -a bitcoind
 
 printf '\e[32m Cleaning \e[0m\n\n'
-rm SHA256SUMS.asc bitcoin-$VERSION-$SO.tar.gz laanwj-releases.asc
+rm SHA256SUMS.asc bitcoin-$VERSION-$SO.tar.gz SHA256SUMS
 rm -Rf bitcoin-$VERSION/
 echo "\n"
 printf "\e[43mBitcoin In Action 🚀\e[0m "
