@@ -20,7 +20,7 @@ wget https://bitcoincore.org/bin/bitcoin-core-$VERSION/SHA256SUMS
 printf "\n\n \e[101m ######### Check the software #########\e[0m\n\n"
 sha256sum --ignore-missing --check SHA256SUMS
 
-printf "\n\n \e[101m ######### Download Checksum #########\e[0m\n\n"
+printf "\n\n \e[101m ######### Download Signatures #########\e[0m\n\n"
 wget https://bitcoincore.org/bin/bitcoin-core-$VERSION/SHA256SUMS.asc
 
 printf "\n\n \e[42m ######### imports and check the signatures #########\e[0m\n\n"
