@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sh main.sh
 TX_DATA=$(cat transaction_data.txt)

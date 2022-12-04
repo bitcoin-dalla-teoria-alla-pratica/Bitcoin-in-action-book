@@ -1,5 +1,5 @@
-#!/bin/sh
-sh tx_legacy.sh
+#!/bin/bash
+./tx_legacy.sh
 
 printf  "\n\n \e[45m ######### Start Signature #########\e[0m\n\n"
 

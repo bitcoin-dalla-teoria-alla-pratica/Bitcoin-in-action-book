@@ -1,17 +1,12 @@
-#!/bin/sh
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
-      exit
-fi
+#!/bin/bash
 
-sh create_p2sh_address_no_signature.sh
+
+./create_p2sh_address_no_signature.sh
 
 #Stop, clean regtest, restart!
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
-bitcoin-cli createwallet "bitcoin in action"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
 
 ADDR_MITT=`bitcoin-cli getnewaddress "mittente" "legacy"`
 

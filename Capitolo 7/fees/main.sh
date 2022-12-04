@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 sh native-TO-native__native-TO-native.sh
 sh native-TO-p2wsh__p2wsh-TO-native.sh
 sh native-TO-p2wsh-native-multi__p2wsh-TO-p2wsh-native-multi.sh

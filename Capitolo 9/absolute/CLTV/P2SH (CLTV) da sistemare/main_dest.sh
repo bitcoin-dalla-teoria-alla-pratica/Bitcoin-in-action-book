@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_MITT=`cat dest/address_P2SH.txt`

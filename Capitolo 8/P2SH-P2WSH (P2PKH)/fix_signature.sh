@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SIGNATURE=`cat signature.txt`
 

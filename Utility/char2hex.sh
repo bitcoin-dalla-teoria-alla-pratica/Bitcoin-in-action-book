@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #Converte la lunghezza di una stringa in Lunghezza espressa in HEX
 #Insert char length
 #2 chars are 1 byte

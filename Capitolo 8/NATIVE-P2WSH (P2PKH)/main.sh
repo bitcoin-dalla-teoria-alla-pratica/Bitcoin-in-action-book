@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
 if [ ! -d $ABSOLUTE_PATH ]
 then
@@ -7,10 +7,10 @@ then
 fi
 
 
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-bitcoin-cli createwallet "bitcoin in action" >> /dev/null
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 #create address
-sh create_address_p2wsh.sh
+./create_address_p2wsh.sh
 
 printf  "\n\n \e[45m ######### Mine 101 blocks and get reward#########\e[0m"
 

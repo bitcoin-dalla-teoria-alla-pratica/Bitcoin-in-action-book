@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 if [ "$1" = 'MAINNET' ]
 then
     VERSION_PREFIX_PB=80

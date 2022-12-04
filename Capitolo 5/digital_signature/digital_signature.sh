@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "Don't trust, verify" > msg.txt
 #create private key
 openssl ecparam -genkey -name secp256k1 -rand /dev/urandom -noout -out private.pem
