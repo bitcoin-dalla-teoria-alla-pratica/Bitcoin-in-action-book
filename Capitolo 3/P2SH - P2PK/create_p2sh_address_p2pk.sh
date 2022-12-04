@@ -1,4 +1,4 @@
-#!/bin/bash -li
+#!/bin/bash
 
 if [ "$1" = 'MAINNET' ]
 then

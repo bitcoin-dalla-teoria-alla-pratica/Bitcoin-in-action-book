@@ -1,9 +1,8 @@
-#!/bin/bash -li
+#!/bin/bash
 
 ./create_p2sh_address_p2pk.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-
 bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
 
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"

@@ -1,4 +1,4 @@
-#!/bin/bash -li
+#!/bin/bash
 
 printf  "\e[101m######### TRANSACTION MALLEABILITY #########\e[0m \n"
 
