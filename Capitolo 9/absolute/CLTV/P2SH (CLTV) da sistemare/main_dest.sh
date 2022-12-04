@@ -73,7 +73,7 @@ echo $SIGNATURE > dest/signature.txt
 
 #check if S value is unnecessarily high
 printf  "\n\n \e[106m ######### Analyzing signature #########\e[0m\n\n"
-cd dest && sh fix_signature.sh >> /dev/null && cd ..
+cd dest && ./fix_signature.sh >> /dev/null && cd ..
 printf  "\e[31m ######### Current Signature #########\e[0m\n\n"
 SIGNATURE=`cat dest/signature.txt`
 echo $SIGNATURE

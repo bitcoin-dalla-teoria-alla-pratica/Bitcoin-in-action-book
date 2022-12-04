@@ -65,7 +65,7 @@ echo $SIGNATURE
 echo $SIGNATURE > signature.txt
 
 printf  "\n\n \e[106m ######### Start Modify s #########\e[0m\n\n"
-sh fix_signature.sh
+./fix_signature.sh
 printf  "\n\n \e[106m ######### END Modify s #########\e[0m\n\n"
 printf  "\e[31m ######### New SIGNATURE #########\e[0m\n\n"
 SIGNATURE=`cat signature.txt`

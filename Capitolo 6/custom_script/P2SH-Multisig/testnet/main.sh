@@ -40,7 +40,7 @@ echo $SIGNATURE > signature.txt
 
 #check if S value is unnecessarily high
 printf  "\n\n \e[106m ######### Analyzing signature #########\e[0m\n\n"
-sh fix_signature.sh
+./fix_signature.sh
 printf  "\e[31m ######### Current Signature #########\e[0m\n\n"
 SIGNATURE=`cat signature.txt`
 echo $SIGNATURE

@@ -102,7 +102,7 @@ SIGNATURE="${SIGNATURE}01"
 echo $SIGNATURE > signature.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh >> /dev/null
+./fix_signature.sh >> /dev/null
 SIGNATURE=$(cat signature.txt)
 SIGNATURELENGTH=$(char2hex.sh $(echo $SIGNATURE | wc -c))
 
@@ -114,7 +114,7 @@ SIGNATURE_2="${SIGNATURE_2}01"
 echo $SIGNATURE_2 > signature_2.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh signature_2.txt >> /dev/null
+./fix_signature.sh signature_2.txt >> /dev/null
 SIGNATURE_2=$(cat signature_2.txt)
 SIGNATURELENGTH_2=$(char2hex.sh $(echo $SIGNATURE_2 | wc -c))
 
