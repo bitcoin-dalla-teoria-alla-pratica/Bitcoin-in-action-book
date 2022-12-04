@@ -135,7 +135,7 @@ echo $BASE10
 printf  "\n\n \e[45m ######### bech32 create checksum #########\e[0m\n\n"
 
 # ----- GET CHECKSUM ----
-CHECKSUM=`python -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
+CHECKSUM=`python3 -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
 echo "\n Checksum"
 echo $CHECKSUM
 

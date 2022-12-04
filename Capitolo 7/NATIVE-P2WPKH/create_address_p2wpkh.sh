@@ -107,7 +107,7 @@ BASE10=`cat base10.txt | sed '$!s/$/, /' | tr -d '\n'`
 echo $BASE10
 
 printf  "\n\n \e[45m ######### bech32 create checksum #########\e[0m\n\n"
-CHECKSUM=`python -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
+CHECKSUM=`python3 -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
 echo $CHECKSUM
 
 #Extract numbers
