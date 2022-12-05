@@ -12,7 +12,7 @@ ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
 bitcoin-cli generatetoaddress 101 $ADDR_P2WSH_MULTISIG >> /dev/null
 bitcoin-cli importaddress $ADDR_P2WSH_MULTISIG
 
-check amount
+#check amount
 bitcoin-cli listunspent 1 101 '["'$ADDR_P2WSH_MULTISIG'"]' | jq
 
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_P2WSH_MULTISIG'"]'`

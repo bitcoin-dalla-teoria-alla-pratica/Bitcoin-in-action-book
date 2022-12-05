@@ -1,12 +1,4 @@
 #!/bin/bash
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "\$ABSOLUTE_PATH Set your Absolute Path"
-      exit
-fi
-
-
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 #create address

@@ -23,5 +23,5 @@ echo $TX_DATA_SIGNED > transaction_data.txt
 
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
 
-echo "\n mine blocks"
+printf "\n mine blocks"
 bitcoin-cli generatetoaddress 6 $ADDR_MITT

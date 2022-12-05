@@ -33,6 +33,6 @@ RES8=$(printf $RES7$WITNESS_RESERVED_VALUE | xxd -r -p | sha256sum -b | xxd -r -
 
 test $RES8 = $COMMITMENT_STRUCTURE  && echo they are the same! || echo ops, they are differents!
 
-echo "\n ---- values ---"
-echo "RES8:" $RES8
-echo "COMMITMENT_STRUCTURE:" $COMMITMENT_STRUCTURE
+printf "\n ---- values ---"
+printf "RES8:" $RES8
+printf "COMMITMENT_STRUCTURE:" $COMMITMENT_STRUCTURE
