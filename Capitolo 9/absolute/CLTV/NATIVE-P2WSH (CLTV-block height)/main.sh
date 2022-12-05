@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
 bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null

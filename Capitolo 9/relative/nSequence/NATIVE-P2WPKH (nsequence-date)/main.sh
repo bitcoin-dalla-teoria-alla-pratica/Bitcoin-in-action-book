@@ -3,6 +3,7 @@
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 ADDR_MITT=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
 

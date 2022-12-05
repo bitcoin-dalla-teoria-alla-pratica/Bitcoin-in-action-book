@@ -64,7 +64,7 @@ printf "\e[46m ---------- Witness Script --------- \e[49m\n"
 SEQUENCE_BLOCKHEIGHT=1618
 BIN=$(echo 'obase=2; '$SEQUENCE_BLOCKHEIGHT'' | bc)
 FLAG=`echo 'ibase=2; 000000000000000'$BIN | bc`
-SEQUENCE_HEX=$(sh padding_script.sh $FLAG)
+SEQUENCE_HEX=$(padding_script.sh $FLAG)
 SEQUENCE_LENGTH=$(char2hex.sh $(printf $SEQUENCE_HEX | wc -c))
 
 

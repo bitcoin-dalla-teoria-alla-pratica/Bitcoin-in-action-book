@@ -6,6 +6,7 @@ bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && slee
 #create address
 ./create_address_p2wsh.sh
 
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 printf  "\n\n \e[45m ######### Mine 101 blocks and get reward#########\e[0m"
 
 ADDR_MITT=`cat address_P2WSH_native.txt`
