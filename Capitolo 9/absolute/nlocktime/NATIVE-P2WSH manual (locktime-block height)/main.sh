@@ -83,7 +83,7 @@ echo "OUTPUT_HASH: "$OUTPUT_HASH
 
 #how many block? base10
 BLOCKHEIGHT=102
-LOCKTIME_PART=$(sh padding.sh 8 $(printf $(echo 'obase=16; '$BLOCKHEIGHT' ' | bc)) | tac -rs ..)
+LOCKTIME_PART=$(padding.sh 8 $(printf $(echo 'obase=16; '$BLOCKHEIGHT' ' | bc)) | tac -rs ..)
 echo "LOCKTIME_PART: "$LOCKTIME_PART
 
 SIGHASH=01000000

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #8 bytes == 16 hex char
 # LENGTH is total length
 LENGTH=$1
