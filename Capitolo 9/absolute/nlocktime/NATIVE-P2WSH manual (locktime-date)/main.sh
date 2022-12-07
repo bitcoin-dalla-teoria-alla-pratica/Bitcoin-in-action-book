@@ -141,16 +141,24 @@ printf "\n \e[41m ######### ALERT #########\e[0m\n\n"
 echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime'))" and the transaction is valid from "$(tohuman.py $TIME) "\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
-secs=$((1 * 60))
-while [ $secs -gt 0 ]; do
-   printf "$secs\n"
-   sleep 1
-   : $((secs--))
-done
+# printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
+# secs=$((1 * 60))
+# while [ $secs -gt 0 ]; do
+#    printf "$secs\n"
+#    sleep 1
+#    : $((secs--))
+# done
+
+printf "\n \e[44m ######### Moving the bitcoind time (2 min) #########\e[0m\n\n"
+bitcoin-cli setmocktime $(date +%s -d 'now + 2 min')
+
 bitcoin-cli generatetoaddress 11 $ADDR_MITT >> /dev/null
 echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime'))" and the transaction is valid from "$(tohuman.py $TIME) "\n"
 echo $TX_SIGNED
 bitcoin-cli decoderawtransaction $TX_SIGNED
 
 bitcoin-cli sendrawtransaction $TX_SIGNED
+
+#default value
+bitcoin-cli setmocktime 0 
+
