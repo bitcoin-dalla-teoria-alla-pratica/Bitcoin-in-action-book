@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #ADD 0 or 00 in order to have positive number and avoid negative (signed magnitude representation)
 #convert in HEX and rappresent it in little endian
 

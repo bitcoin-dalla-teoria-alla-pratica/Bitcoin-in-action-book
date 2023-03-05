@@ -1,15 +1,10 @@
-#!/bin/sh
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
-      exit
-fi
+#!/bin/bash
 
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-bitcoin-cli createwallet "bitcoin in action" >> /dev/null
+
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 #create address
-sh create_address_p2wsh.sh
+./create_address_p2wsh.sh
 
 printf  "\n\n \e[45m ######### Mine 101 blocks and get reward#########\e[0m"
 
@@ -110,7 +105,7 @@ SIGNATURE="${SIGNATURE}01"
 echo $SIGNATURE > signature.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh >> /dev/null
+./fix_signature.sh >> /dev/null
 SIGNATURE=$(cat signature.txt)
 
 printf  "\n \e[42m ######### Create Sign Transaction #########\e[0m\n\n"
@@ -149,16 +144,22 @@ if [[ -n $1 ]] ; then
   btcdeb --tx=$TX_DATA_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
 fi
 
-printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
-secs=$((1 * 30))
-while [ $secs -gt 0 ]; do
-   printf "$secs\n"
-   sleep 1
-   : $((secs--))
-done
+# printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
+# secs=$((1 * 30))
+# while [ $secs -gt 0 ]; do
+#    printf "$secs\n"
+#    sleep 1
+#    : $((secs--))
+# done
+
+printf "\n \e[44m ######### Moving the bitcoind time (1 min) #########\e[0m\n\n"
+bitcoin-cli setmocktime $(date +%s -d 'now + 1 min')
+
 printf "\n \e[45m ######### mine 11 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 11 $ADDR_MITT
 
 echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime'))" and the transaction is valid from "$(tohuman.py $TIME) "\n"
 printf "\n \e[42m ######### send Transaction #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_DATA_SIGNED
+
+bitcoin-cli setmocktime 0

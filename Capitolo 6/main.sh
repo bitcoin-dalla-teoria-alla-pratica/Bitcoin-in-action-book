@@ -1,18 +1,12 @@
-#!/bin/sh
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
-      exit
-fi
+#!/bin/bash
 
 
 #create address 1-3
-sh create_p2sh_address.sh
+./create_p2sh_address.sh
 
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
-bitcoin-cli createwallet "bitcoin in action"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2SH=`cat address_P2SH.txt`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
@@ -51,7 +45,7 @@ echo $SIGNATURE > signature.txt
 
 #check if S value is unnecessarily high
 printf  "\n\n \e[106m ######### Analyzing signature #########\e[0m\n\n"
-sh fix_signature.sh
+./fix_signature.sh
 printf  "\e[31m ######### Current Signature #########\e[0m\n\n"
 SIGNATURE=`cat signature.txt`
 echo $SIGNATURE

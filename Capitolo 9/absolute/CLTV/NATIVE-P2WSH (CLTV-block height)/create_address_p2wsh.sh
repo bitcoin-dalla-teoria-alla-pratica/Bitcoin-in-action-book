@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 if [ "$1" = 'MAINNET' ]
 then
     VERSION_PREFIX_PB=80
@@ -60,10 +60,10 @@ done
 printf "\e[46m ---------- Witness Script --------- \e[49m\n"
 #BLOCKHEIGHT=129 #scrive -1 Binary: 1000 0001, 1 is top sign (0 positive, 1 negative)
 BLOCKHEIGHT=137
-LOCKTIME_PART=$(sh padding_script.sh $BLOCKHEIGHT)
+LOCKTIME_PART=$(padding_script.sh $BLOCKHEIGHT)
 #LOCKTIME_PART=$(printf $(echo 'obase=16; '$BLOCKHEIGHT' ' | bc) | tac -rs ..) #enable this line to give possible negative number.
 
-LENGTH_LOCKTIME_PART=$(sh char2hex.sh $(printf $LOCKTIME_PART | wc -c))
+LENGTH_LOCKTIME_PART=$(char2hex.sh $(printf $LOCKTIME_PART | wc -c))
 WITNESS_SCRIPT=$LENGTH_LOCKTIME_PART$LOCKTIME_PART"B1755121"$(cat compressed_public_key_1.txt)"21"$(cat compressed_public_key_2.txt)"21"$(cat compressed_public_key_3.txt)"53AE"
 printf $WITNESS_SCRIPT > witness_script.txt
 cat witness_script.txt
@@ -135,13 +135,13 @@ echo $BASE10
 printf  "\n\n \e[45m ######### bech32 create checksum #########\e[0m\n\n"
 
 # ----- GET CHECKSUM ----
-CHECKSUM=`python -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
-echo "\n Checksum"
+CHECKSUM=`python3 -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
+printf "\n Checksum \n"
 echo $CHECKSUM
 
 #Extract numbers
 NUMBERS=`echo $CHECKSUM | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' '`
-echo "\n Number"
+printf "\n Number \n"
 echo $NUMBERS
 
 #Map with Charset

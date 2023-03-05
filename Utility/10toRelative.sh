@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BIN=$(echo "obase=2;$1" | bc)
 #echo $BIN

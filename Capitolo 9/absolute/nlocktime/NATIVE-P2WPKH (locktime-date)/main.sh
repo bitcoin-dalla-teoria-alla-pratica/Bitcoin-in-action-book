@@ -1,13 +1,8 @@
-#!/bin/sh
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
-      exit
-fi
+#!/bin/bash
 
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-bitcoin-cli createwallet "bitcoin in action" >> /dev/null
+
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 ADDR_MITT=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
 
@@ -44,13 +39,16 @@ echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli 
 
 bitcoin-cli sendrawtransaction $TX_SIGNED
 
-printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
-secs=$((1 * 60))
-while [ $secs -gt 0 ]; do
-   printf "$secs\n"
-   sleep 1
-   : $((secs--))
-done
+# printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
+# secs=$((1 * 60))
+# while [ $secs -gt 0 ]; do
+#    printf "$secs\n"
+#    sleep 1
+#    : $((secs--))
+# done
+
+printf "\n \e[44m ######### Moving the bitcoind time (2 min) #########\e[0m\n\n"
+bitcoin-cli setmocktime $(date +%s -d 'now + 2 min')
 
 bitcoin-cli generatetoaddress 11 $ADDR_MITT >> /dev/null
 echo "The last mediantime is "$(tohuman.py $(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime'))" and the transaction is valid from "$(tohuman.py $TIME) "\n"
@@ -59,3 +57,6 @@ echo $TX_SIGNED
 bitcoin-cli decoderawtransaction $TX_SIGNED
 
 bitcoin-cli sendrawtransaction $TX_SIGNED
+
+#default value
+bitcoin-cli setmocktime 0 

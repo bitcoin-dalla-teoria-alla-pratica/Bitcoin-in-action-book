@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 if [ "$1" = 'MAINNET' ]
 then
     VERSION_PREFIX_PB=80
@@ -64,7 +64,7 @@ printf "\e[46m ---------- Witness Script --------- \e[49m\n"
 SEQUENCE_BLOCKHEIGHT=1618
 BIN=$(echo 'obase=2; '$SEQUENCE_BLOCKHEIGHT'' | bc)
 FLAG=`echo 'ibase=2; 000000000000000'$BIN | bc`
-SEQUENCE_HEX=$(sh padding_script.sh $FLAG)
+SEQUENCE_HEX=$(padding_script.sh $FLAG)
 SEQUENCE_LENGTH=$(char2hex.sh $(printf $SEQUENCE_HEX | wc -c))
 
 
@@ -139,13 +139,13 @@ echo $BASE10
 printf  "\n\n \e[45m ######### bech32 create checksum #########\e[0m\n\n"
 
 # ----- GET CHECKSUM ----
-CHECKSUM=`python -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
-echo "\n Checksum"
+CHECKSUM=`python3 -c "import bech32; print (bech32.bech32_create_checksum('$HRP', [$BASE10] ))"`
+printf "\n Checksum \n"
 echo $CHECKSUM
 
 #Extract numbers
 NUMBERS=`echo $CHECKSUM | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' '`
-echo "\n Number"
+printf "\n Number \n"
 echo $NUMBERS
 
 #Map with Charset

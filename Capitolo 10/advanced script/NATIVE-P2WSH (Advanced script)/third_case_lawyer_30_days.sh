@@ -1,16 +1,11 @@
-#!/bin/sh
-ABSOLUTE_PATH="$HOME/Documents/Bitcoin-in-action-book/Bitcoin"
-if [ ! -d $ABSOLUTE_PATH ]
-then
-      echo "Error: Directory ${ABSOLUTE_PATH} does not exist. Set \$ABSOLUTE_PATH in ${0} before continue"
-      exit
-fi
+#!/bin/bash
 
 
-bitcoin-cli stop && sleep 5 && rm -Rf $ABSOLUTE_PATH/regtest && bitcoind && sleep 5
-bitcoin-cli createwallet "bitcoin in action" >> /dev/null
+
+bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
 #create address
-sh create_address_p2wsh.sh
+./create_address_p2wsh.sh
 
 ADDR_MITT=`cat address_P2WSH_native.txt`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
@@ -107,7 +102,7 @@ SIGNATURE="${SIGNATURE}01"
 echo $SIGNATURE > signature.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh >> /dev/null
+./fix_signature.sh >> /dev/null
 SIGNATURE=$(cat signature.txt)
 SIGNATURELENGTH=$(char2hex.sh $(echo $SIGNATURE | wc -c))
 
@@ -119,7 +114,7 @@ SIGNATURE_2="${SIGNATURE_2}01"
 echo $SIGNATURE_2 > signature_2.txt
 
 #checking signature and fix it if necessary
-sh fix_signature.sh signature_2.txt >> /dev/null
+./fix_signature.sh signature_2.txt >> /dev/null
 SIGNATURE_2=$(cat signature_2.txt)
 SIGNATURELENGTH_2=$(char2hex.sh $(echo $SIGNATURE_2 | wc -c))
 
@@ -161,22 +156,25 @@ if [[ -n $1 ]] ; then
   btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
 fi
 
-echo "\n ---------"
-echo "0)🏃🏃🏻‍♂️ ARE YOU IN A HURRY? Dont wait "$(echo $SEC)" seconds."
-echo "1)The difference between bestblock's mediantime and previous block's mediantime is: "$(expr $CURRENT_MEDIANTIME - $PREVIOUS_MEDIAN_TIME)" The result must be >= "$(echo $SEC)
-echo '2)MOVE YOUR CLOCK @' $(tohuman.py $(forwardseconds.py $SEC)) 'or more'
-echo '3)Execute => bitcoin-cli generatetoaddress 11 $(bitcoin-cli getnewaddress "" "bech32") >> /dev/null'
-echo '4)Execute => bitcoin-cli sendrawtransaction '$(echo $TX_SIGNED)
-echo '...OR WAIT 🤷🏻‍♂️'
-echo "---------\n"
+# echo "\n ---------"
+# echo "0)🏃🏃🏻‍♂️ ARE YOU IN A HURRY? Dont wait "$(echo $SEC)" seconds."
+# echo "1)The difference between bestblock's mediantime and previous block's mediantime is: "$(expr $CURRENT_MEDIANTIME - $PREVIOUS_MEDIAN_TIME)" The result must be >= "$(echo $SEC)
+# echo '2)MOVE YOUR CLOCK @' $(tohuman.py $(forwardseconds.py $SEC)) 'or more'
+# echo '3)Execute => bitcoin-cli generatetoaddress 11 $(bitcoin-cli getnewaddress "" "bech32") >> /dev/null'
+# echo '4)Execute => bitcoin-cli sendrawtransaction '$(echo $TX_SIGNED)
+# echo '...OR WAIT 🤷🏻‍♂️'
+# echo "---------\n"
 
-printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
-secs=$((1 * $SEC))
-while [ $secs -gt 0 ]; do
-   printf "$secs\n"
-   sleep 1
-   : $((secs--))
-done
+# printf "\n \e[41m ######### Waiting... ⏳ #########\e[0m\n\n"
+# secs=$((1 * $SEC))
+# while [ $secs -gt 0 ]; do
+#    printf "$secs\n"
+#    sleep 1
+#    : $((secs--))
+# done
+
+printf "\n \e[44m ######### Moving the bitcoind time (30 days) #########\e[0m\n\n"
+bitcoin-cli setmocktime $(date +%s -d 'now + 30 days')
 
 printf "\n \e[45m ######### mine 11 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 11 $ADDR_MITT
@@ -189,3 +187,5 @@ printf "\n \e[42m ######### Done! #########\e[0m\n\n"
 CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime')
 echo "The difference between bestblock's mediantime and previous block's mediantime is: "$(expr $CURRENT_MEDIANTIME - $PREVIOUS_MEDIAN_TIME)" The result must be >= "$(echo $SEC)
 bitcoin-cli sendrawtransaction $TX_SIGNED
+
+bitcoin-cli setmocktime 0

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 #Si inserisce la transaction data e viene "esplosa" nelle sue parti piu interessanti.

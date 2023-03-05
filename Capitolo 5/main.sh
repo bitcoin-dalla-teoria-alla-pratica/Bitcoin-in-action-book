@@ -1,5 +1,5 @@
-#!/bin/sh
-sh tx_legacy.sh
+#!/bin/bash
+./tx_legacy.sh
 
 printf  "\n\n \e[45m ######### Start Signature #########\e[0m\n\n"
 
@@ -53,7 +53,7 @@ then
   printf  "\e[42m ######### Valid Signature #########\e[0m\n\n"
   echo "TXID: "$TXID_SEND
 
-  printf  "\n\n \e[105m ######### mine blocks #########\e[0m\n\n"
+  printf "\n\n \e[105m ######### mine blocks #########\e[0m\n\n"
   bitcoin-cli generatetoaddress 6 $ADDR_MITT
   exit
 else
@@ -65,7 +65,7 @@ echo $SIGNATURE
 echo $SIGNATURE > signature.txt
 
 printf  "\n\n \e[106m ######### Start Modify s #########\e[0m\n\n"
-sh fix_signature.sh
+./fix_signature.sh
 printf  "\n\n \e[106m ######### END Modify s #########\e[0m\n\n"
 printf  "\e[31m ######### New SIGNATURE #########\e[0m\n\n"
 SIGNATURE=`cat signature.txt`

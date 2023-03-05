@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$1" = 'MAINNET' ]
 then
@@ -72,6 +72,7 @@ do
   #https://bitcoin.stackexchange.com/questions/72587/p2sh-redeem-script-hash
   #https://bitcoin.stackexchange.com/questions/66197/step-by-step-example-to-redeem-a-p2sh-output-required
   PBLENGTH=$(char2hex.sh $(cat compressed_public_key_1.txt | wc -c)) #Always 21...
+  
   #PB LENGTH - PB - OP_CHECKSIG
   SCRIPT=$PBLENGTH$(cat compressed_public_key_1.txt)"AC"
   printf $SCRIPT > redeem_script.txt

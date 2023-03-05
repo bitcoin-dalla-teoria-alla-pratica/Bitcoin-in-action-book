@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#commitment-structure
 # 1-byte - OP_RETURN (0x6a)
@@ -7,7 +7,7 @@
 # 32-byte - Commitment hash: Double-SHA256(witness root hash|witness reserved value)
 #
 # 39th byte onwards: Optional data with no consensus meaning
-sh create_transactions.sh
+./create_transactions.sh
 
 printf  "\n\n \e[41m ######### Creating Segregated merkle tree #########\e[0m\n\n"
 COMMITMENT_STRUCTURE=$(cat coinbase.txt | jq -r '.vout[1].scriptPubKey.hex' | cut -c 13-78)
@@ -33,6 +33,6 @@ RES8=$(printf $RES7$WITNESS_RESERVED_VALUE | xxd -r -p | sha256sum -b | xxd -r -
 
 test $RES8 = $COMMITMENT_STRUCTURE  && echo they are the same! || echo ops, they are differents!
 
-echo "\n ---- values ---"
-echo "RES8:" $RES8
-echo "COMMITMENT_STRUCTURE:" $COMMITMENT_STRUCTURE
+printf "\n ---- values ---"
+printf "RES8:" $RES8
+printf "COMMITMENT_STRUCTURE:" $COMMITMENT_STRUCTURE

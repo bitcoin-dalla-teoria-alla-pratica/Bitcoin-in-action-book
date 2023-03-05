@@ -1,3 +1,4 @@
+#!/bin/bash
 #8 bytes == 16 hex char
 LENGTH=16
 
