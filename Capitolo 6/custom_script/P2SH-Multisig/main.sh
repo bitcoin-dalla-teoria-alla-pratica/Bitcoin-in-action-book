@@ -8,6 +8,9 @@ bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && slee
 
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2SH=`cat address_P2SH.txt`
+
+
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
 bitcoin-cli generatetoaddress 101 $ADDR_P2SH >> /dev/null
 bitcoin-cli importaddress $ADDR_P2SH

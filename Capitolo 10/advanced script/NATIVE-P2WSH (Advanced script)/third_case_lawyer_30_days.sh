@@ -176,8 +176,6 @@ fi
 printf "\n \e[44m ######### Moving the bitcoind time (30 days) #########\e[0m\n\n"
 bitcoin-cli setmocktime $(date +%s -d 'now + 30 days')
 
-
-
 printf "\n \e[45m ######### mine 11 blocks #########\e[0m\n\n"
 bitcoin-cli generatetoaddress 11 $ADDR_MITT
 

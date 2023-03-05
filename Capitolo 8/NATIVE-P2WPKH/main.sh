@@ -102,7 +102,7 @@ SIGNATURE="${SIGNATURE}01"
 echo $SIGNATURE > signature.txt
 
 #checking signature and fix it if necessary
-./fix_signature.sh >> /dev/null
+./fix_signature.sh 
 SIGNATURE=$(cat signature.txt)
 
 printf  "\n \e[42m ######### Create Sign Transaction #########\e[0m\n\n"

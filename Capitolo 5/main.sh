@@ -53,7 +53,7 @@ then
   printf  "\e[42m ######### Valid Signature #########\e[0m\n\n"
   echo "TXID: "$TXID_SEND
 
-  printf  "\n\n \e[105m ######### mine blocks #########\e[0m\n\n"
+  printf "\n\n \e[105m ######### mine blocks #########\e[0m\n\n"
   bitcoin-cli generatetoaddress 6 $ADDR_MITT
   exit
 else
