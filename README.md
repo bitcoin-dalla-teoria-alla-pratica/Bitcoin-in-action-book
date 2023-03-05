@@ -16,6 +16,8 @@ Il Libro è disponibile su:
 * [Amazon](https://amzn.to/3pJcXj1)
 * [Sito ufficiale](https://bit.ly/38RtF9x)
 
+# Come replicare facilmente gli esempi?
+Puoi clonare il repository [Docker Bitcoin](https://github.com/bitcoin-dalla-teoria-alla-pratica/Docker-bitcoin)
 
 # Ho trovato un errore!
 
