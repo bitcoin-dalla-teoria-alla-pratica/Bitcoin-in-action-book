@@ -4,13 +4,19 @@
 ./create_address_p2wsh_multisig.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" >> /dev/null
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2WSH_MULTISIG=`cat address_P2WSH_native_multisig.txt`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
 
 bitcoin-cli generatetoaddress 101 $ADDR_P2WSH_MULTISIG >> /dev/null
-bitcoin-cli importaddress $ADDR_P2WSH_MULTISIG
+#bitcoin-cli importaddress $ADDR_P2WSH_MULTISIG
+PK1=$(cat compressed_private_key_WIF_1.txt)
+PK2=$(cat compressed_private_key_WIF_2.txt)
+PK3=$(cat compressed_private_key_WIF_3.txt)
+CHECKSUM=$(bitcoin-cli getdescriptorinfo "wsh(multi(2,$PK1,$PK2,$PK3))" | jq -r .checksum)
+bitcoin-cli importdescriptors '[{ "desc": "wsh(multi(2,'$PK1','$PK2','$PK3'))#'"$CHECKSUM"'", "timestamp": "now", "internal": true }]'
+
 
 #check amount
 bitcoin-cli listunspent 1 101 '["'$ADDR_P2WSH_MULTISIG'"]' | jq
@@ -31,7 +37,8 @@ SCRIPTPUBKEY=`cat scriptPubKey.txt`
 WITNESS_SCRIPT=$(cat witness_script.txt)
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK1'","'$PK2'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"witnessScript":"'$WITNESS_SCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK1'","'$PK2'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"witnessScript":"'$WITNESS_SCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
 
 if [[ -n $1 ]] ; then
   btcdeb --tx=$TX_SIGNED --txin=$TXIN

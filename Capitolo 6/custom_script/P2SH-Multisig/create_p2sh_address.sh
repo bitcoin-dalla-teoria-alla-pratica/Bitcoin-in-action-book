@@ -78,7 +78,7 @@ do
 done
 
     printf  "\n\e[42m ######### P2SH #########\e[49m\n\n"
-    #OP_1 <Public Key hash> <Public Key hash> <Public Key hash> 3 OP_CHECKMULTISIGVERIFY OP_3 OP_EQUAL
+    #OP_1 <Public Key> <Public Key> <Public Key> 3 OP_CHECKMULTISIGVERIFY OP_3 OP_EQUAL
     SCRIPT="5121"$(cat compressed_public_key_1.txt)"21"$(cat compressed_public_key_2.txt)"21"$(cat compressed_public_key_3.txt)"53AF5387"
     printf "\e[46m ---------- Redeem Script --------- \e[49m\n"
     printf $SCRIPT > redeem_script.txt

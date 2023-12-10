@@ -1,16 +1,21 @@
+
 #!/bin/bash
 
-./create_p2sh_address_compressed.sh
+#./create_p2sh_address_compressed.sh
 
 #Stop, clean regtest, restart!
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-
 bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 
 ADDR_MITT=`bitcoin-cli getnewaddress "mittente" "legacy"`
 
-#Get P2SH address
-ADDR_DEST=`cat address_P2SH.txt`
+ADDR1=$(bitcoin-cli getnewaddress)
+PB1=$(bitcoin-cli getaddressinfo $ADDR1 | jq -r '.pubkey')
+ADDR2=$(bitcoin-cli getnewaddress)
+PB2=$(bitcoin-cli getaddressinfo $ADDR2 | jq -r '.pubkey')
+#bitcoin-cli createmultisig 2 '["'$PB1'","'$PB2'"]'
+#-named permette di passare i valori chiave valori
+ADDR_DEST=$(bitcoin-cli -named createmultisig nrequired=2 keys='''["'$PB1'","'$PB2'"]''' | jq -r .address)
 
 #Mint 101 blocks and get reward to spend
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
@@ -34,34 +39,10 @@ bitcoin-cli generatetoaddress 6 $ADDR_MITT
 printf  "\n \e[31m######### spend from P2SH #########\e[39m \n"
 AMOUNT=`bitcoin-cli getrawtransaction $TXID 2 | jq -r '.vout[0].value-0.0001'`
 VOUT=0
-#PK1=`cat uncompressed_private_key_WIF_1.txt`
-#PK2=`cat uncompressed_private_key_WIF_2.txt`
-#PK3=`cat uncompressed_private_key_WIF_3.txt`
-
-# With compressed key. You must change redeem script in create_p2sh_address.sh
-PK1=`cat compressed_private_key_WIF_1.txt`
-PK2=`cat compressed_private_key_WIF_2.txt`
-PK3=`cat compressed_private_key_WIF_3.txt`
-
-REDEEM=`cat redeem_script.txt`
-
-#add opcode BIP0016
-# A9 => OP_HASH160
-# 14 => 20 bytes, 40 char hex push into the stack $(expr `echo "ibase=16; $(printf 14 | tr '[:lower:]' '[:upper:]')" | bc` "*" 2 )
-# 87 => OP_EQUAL
-SCRIPTPUBKEY="A914"`cat scriptPubKey.txt`"87"
-
-TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","redeemScript":"'$REDEEM'"}]' '[{"'$ADDR_MITT'":'$AMOUNT'},{"data":"636f72736f626974636f696e2e636f6d0a"}]')
-bitcoin-cli decoderawtransaction $TX_DATA | jq
-
-printf  "\n \e[31m######### Sign with first private key (get an error)#########\e[0m \n"
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK1'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","redeemScript":"'$REDEEM'"}]'  | jq -r '.hex')
-bitcoin-cli sendrawtransaction $TX_SIGNED
-
-printf  "\n \e[31m######### Sign with second private key #########\e[0m \n"
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_SIGNED '["'$PK2'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","redeemScript":"'$REDEEM'"}]'  | jq -r '.hex')
-bitcoin-cli sendrawtransaction $TX_SIGNED
-
+TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_MITT'":'$AMOUNT'}]'`
+bitcoin-cli -named decoderawtransaction hexstring=$TX_DATA 
+TX_SIGNED=$(bitcoin-cli -named signrawtransactionwithwallet hexstring=$TX_DATA | jq -r '.hex')
+bitcoin-cli -named sendrawtransaction hexstring=$TX_SIGNED
 if [[ -n $1 ]] ; then
   btcdeb --tx=$TX_SIGNED --txin=$(bitcoin-cli getrawtransaction $TXID)
 fi

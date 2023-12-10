@@ -3,7 +3,7 @@
 
 #bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
-#Get BTC from faucet https://bitcoinfaucet.uo1.net/
+#Get BTC from faucet https://bitcoinfaucet.uo1.net/, https://tbtc.bitaps.com/
 ADDR_P2SH=`cat address_P2SH.txt`
 ADDR_DEST="2NGZrVvZG92qGYqzTLjCAewvPZ7JE8S8VxE"
 

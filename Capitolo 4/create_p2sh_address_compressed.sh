@@ -82,7 +82,7 @@ done
     #SCRIPT="5241"$(cat uncompressed_public_key_1.txt)"41"$(cat uncompressed_public_key_2.txt)"41"$(cat uncompressed_public_key_3.txt)"53AE"
 
     #With compressed public key
-    SCRIPT="5221"$(cat compressed_public_key_1.txt)"21"$(cat compressed_public_key_2.txt)"21"$(cat compressed_public_key_2.txt)"53AE"
+    SCRIPT="5221"$(cat compressed_public_key_1.txt)"21"$(cat compressed_public_key_2.txt)"21"$(cat compressed_public_key_3.txt)"53AE"
 
     printf "\e[46m ---------- Redeem Script --------- \e[49m\n"
     printf $SCRIPT > redeem_script.txt

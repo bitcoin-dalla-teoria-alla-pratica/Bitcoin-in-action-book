@@ -3,7 +3,7 @@
 printf  "\e[101m######### TRANSACTION MALLEABILITY #########\e[0m \n"
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind -acceptnonstdtxn=1 && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 
 ADDR_MITT=`bitcoin-cli getnewaddress "malleability mittente" "legacy"`
 ADDR_DEST=`bitcoin-cli getnewaddress "malleability destinatario" "legacy"`
@@ -14,14 +14,17 @@ TXID_UNSPENT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].tx
 VOUT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].vout')
 AMOUNT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].amount-0.001')
 
-PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
+
 
 printf  "\n \e[31m######### TX_DATA UNSIGNED #########\e[0m \n"
 TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID_UNSPENT'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]'`
 printf $TX_DATA
 
 printf  "\n\n \e[31m######### Sign the transaction #########\e[0m \n"
-TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+#Get sender's PK (Legcy Wallet no descriptor)
+#PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
+# TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA | jq -r '.hex')
 
 printf  "\n \e[31m######### TX_DATA SIGNED #########\e[0m \n"
 printf $TX_DATA_SIGNED

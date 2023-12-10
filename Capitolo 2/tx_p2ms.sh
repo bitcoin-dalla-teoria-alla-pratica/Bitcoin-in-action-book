@@ -3,7 +3,7 @@
 ./create_legacy_address.sh
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 
 ADDR_MITT=`bitcoin-cli getnewaddress "mittente" "legacy"`
 ADDR_DEST=`cat uncompressed_btc_address_1.txt`
@@ -14,10 +14,7 @@ TXID=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].txid')
 VOUT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].vout')
 AMOUNT=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq -r '.[0].amount-0.001')
 
-#echo $AMOUNT
-PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
-#echo "\n"
-#echo $PK
+
 
 printf  "\n \e[31m######### TX_DATA #########\e[0m \n"
 TX_DATA=`bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]'`
@@ -40,7 +37,10 @@ TX_DATA=`printf $TX_DATA_INIT"C95241"$UNCOMPRESSED_PB1"41"$UNCOMPRESSED_PB2"41"$
 echo "$TX_DATA"
 
 printf  "\n \e[31m######### Send transaction and mint 6 blocks #########\e[0m \n"
-TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+#Get sender's PK (Legcy Wallet no descriptor)
+#PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
+# TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+TX_DATA_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA | jq -r '.hex')
 TXID=`bitcoin-cli sendrawtransaction $TX_DATA_SIGNED`
 bitcoin-cli generatetoaddress 6 $ADDR_MITT
 

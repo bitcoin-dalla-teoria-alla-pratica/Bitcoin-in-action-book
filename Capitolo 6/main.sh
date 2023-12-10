@@ -6,12 +6,32 @@
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 ADDR_P2SH=`cat address_P2SH.txt`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "legacy"`
+
+#bitcoin-cli importaddress $ADDR_P2SH
+PK1=`cat compressed_private_key_WIF_1.txt`
+PK2=`cat compressed_private_key_WIF_2.txt`
+PK3=`cat compressed_private_key_WIF_3.txt`
+CHECKSUM=$(bitcoin-cli getdescriptorinfo "sh(multi(1,$PK1,$PK2,$PK3))" | jq -r .checksum)
+bitcoin-cli importdescriptors '[{ "desc": "sh(multi(1,'$PK1','$PK2','$PK3'))#'$CHECKSUM'", "timestamp": "now", "internal": true }]'
+
+#DEBUG
+#PK1=`cat compressed_private_key_WIF_1.txt`
+#PK2=`cat compressed_private_key_WIF_2.txt`
+#PK3=`cat compressed_private_key_WIF_3.txt`
+#DESC=$(bitcoin-cli getdescriptorinfo "sh(multi(1,$PK1,$PK2,$PK3))" | jq -r .descriptor)
+#bitcoin-cli deriveaddresses $DESC
+#printf $(cat address_P2SH.txt)
+#ADDR=$(bitcoin-cli deriveaddresses $DESC | jq -r '.[0]')
+#bitcoin-cli getaddressinfo $ADDR
+
+
+
 bitcoin-cli generatetoaddress 101 $ADDR_P2SH >> /dev/null
-bitcoin-cli importaddress $ADDR_P2SH
+
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_P2SH'"]'`
 
 printf  "\e[43m ######### Start with P2SH transaction  #########\e[0m\n\n"

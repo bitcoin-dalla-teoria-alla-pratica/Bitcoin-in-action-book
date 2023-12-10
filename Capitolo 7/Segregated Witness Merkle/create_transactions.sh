@@ -1,9 +1,7 @@
 #!/bin/bash
 
-
-
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 printf  "\n\n \e[45m ######### Mine 101 blocks #########\e[0m\n\n"
 
 #Get P2SH-P2WPKH
@@ -27,10 +25,12 @@ REDEEMSCRIPT=$(echo $UTXO | jq -r '.[0].redeemScript')
 SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
 TXIN=`bitcoin-cli getrawtransaction $TXID`
 
-PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_NATIVE`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_NATIVE`
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2SH_P2WPKH_2'":12.5},{"'$ADDR_P2SH_P2WPKH_3'":12.5},{"'$ADDR_P2PKH'":12.5},{"'$ADDR_P2PKH_2'":6.4998},{"'$ADDR_P2SH_P2WPKH_NATIVE'":6}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+
 
 echo $TX_SIGNED
 bitcoin-cli decoderawtransaction $TX_SIGNED | jq
@@ -60,10 +60,11 @@ AMOUNT=$(echo $UTXO | jq -r '.[0].amount-0.009')
 TOTAL_UTXO_AMOUNT=$(echo $UTXO | jq -r '.[0].amount')
 REDEEMSCRIPT=$(echo $UTXO | jq -r '.[0].redeemScript')
 SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
-PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_2`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_2`
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2SH_P2WPKH_NATIVE'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
 
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 
@@ -83,10 +84,12 @@ AMOUNT=$(echo $UTXO | jq -r '.[0].amount-0.009')
 TOTAL_UTXO_AMOUNT=$(echo $UTXO | jq -r '.[0].amount')
 REDEEMSCRIPT=$(echo $UTXO | jq -r '.[0].redeemScript')
 SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
-PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_3`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2SH_P2WPKH_3`
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2PKH'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 
 printf "TXID: "$TXID
@@ -101,9 +104,10 @@ UTXO=`bitcoin-cli listunspent 1 6 '["'$ADDR_P2PKH'"]'`
 TXID=$(echo $UTXO | jq -r '.[0].txid')
 VOUT=$(echo $UTXO | jq -r '.[0].vout')
 AMOUNT=$(echo $UTXO | jq -r '.[0].amount-0.009')
-PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH`
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2PKH_2'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA | jq -r '.hex')
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 
 printf "TXID: "$TXID
@@ -122,10 +126,12 @@ AMOUNT=$(echo $UTXO | jq -r '.[0].amount-0.0009')
 TOTAL_UTXO_AMOUNT=$(echo $UTXO | jq -r '.[0].amount')
 REDEEMSCRIPT=$(echo $UTXO | jq -r '.[0].redeemScript')
 SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
-PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH_2`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH_2`
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2SH_P2WPKH_NATIVE'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"redeemScript":"'$REDEEMSCRIPT'","scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 
 printf "TXID: "$TXID
