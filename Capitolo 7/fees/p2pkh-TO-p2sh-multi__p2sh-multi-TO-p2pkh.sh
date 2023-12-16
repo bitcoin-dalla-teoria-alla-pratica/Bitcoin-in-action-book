@@ -1,27 +1,31 @@
 #!/bin/bash
-
+DA FINIRE
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoinInAction"
 
 ADDR_P2PKH=`bitcoin-cli getnewaddress "" "legacy"`
 
 ADDR_1=`bitcoin-cli getnewaddress '' 'legacy'`
 ADDR_2=`bitcoin-cli getnewaddress '' 'legacy'`
-ADDR_P2SH=`bitcoin-cli addmultisigaddress 1 '["'$ADDR_1'","'$ADDR_2'"]' "" "legacy" | jq -r '.address'`
+PB1=$(bitcoin-cli -named getaddressinfo address=$ADDR_1 | jq -r '.pubkey')
+PB2=$(bitcoin-cli -named getaddressinfo address=$ADDR_2 | jq -r '.pubkey')
+#ADDR_P2SH=`bitcoin-cli addmultisigaddress 1 '["'$ADDR_1'","'$ADDR_2'"]' "" "legacy" | jq -r '.address'`
+ADDR_P2SH=`bitcoin-cli -named createmultisig nrequired=1 keys='''["'$PB1'","'$PB2'"]''' address_type="legacy" | jq -r '.address'`
 
 bitcoin-cli generatetoaddress 101 $ADDR_P2PKH >> /dev/null
 
 printf "\n\n \e[104m ######### Coinbase -> P2PKH -> P2SH (multisignature 1-2) #########\e[0m\n\n"
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_P2PKH'"]'`
-PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH`
+#PK=`bitcoin-cli dumpprivkey $ADDR_P2PKH`
 
 TXID=$(echo $UTXO | jq -r '.[0].txid')
 VOUT=$(echo $UTXO | jq -r '.[0].vout')
 AMOUNT=$(echo $UTXO | jq -r '.[0].amount-0.009')
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_P2SH'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]'| jq -r '.hex')
+#TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]'| jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA | jq -r '.hex')
 
 TXID=$(bitcoin-cli sendrawtransaction $TX_SIGNED)
 
@@ -40,8 +44,16 @@ expr "byte: "$(expr `printf $TX_SIGNED | wc -c` / 2)
 bitcoin-cli generatetoaddress 6 $ADDR_P2PKH >> /dev/null
 
 printf "\n\n \e[104m ######### P2SH (multisignature 1-2) -> P2PKH  #########\e[0m\n\n"
-PK=`bitcoin-cli dumpprivkey $ADDR_1`
-bitcoin-cli importaddress $ADDR_P2SH
+#PK=`bitcoin-cli dumpprivkey $ADDR_1`
+
+#bitcoin-cli importaddress $ADDR_P2SH
+# bitcoin-cli -named createwallet wallet_name="bia" disable_private_keys=true
+# CHECKSUM=$(bitcoin-cli getdescriptorinfo "wsh(multi(1,$PB1,$PB2))" | jq -r .checksum)
+# bitcoin-cli -rpcwallet=bia importdescriptors '[{ "desc": "wsh(multi(1,'$PB1','$PB2'))#'"$CHECKSUM"'", "timestamp": "now", "internal": true }]'
+
+#bitcoin-cli importmulti '[{ "scriptPubKey": { "address": "'$ADDR_1'" }, "timestamp": "now" }, { "scriptPubKey": { "address": "'$ADDR_2'" }, "timestamp": "now" }]'
+
+
 UTXO=`bitcoin-cli listunspent 1 6 '["'$ADDR_P2SH'"]'`
 
 TXID=$(echo $UTXO | jq -r '.[0].txid')
