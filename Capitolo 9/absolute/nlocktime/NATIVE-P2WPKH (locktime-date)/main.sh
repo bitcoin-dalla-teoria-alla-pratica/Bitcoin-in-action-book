@@ -2,14 +2,13 @@
 
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 ADDR_MITT=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
 
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
 
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]'`
-PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
 
 TXID=$(echo $UTXO | jq -r '.[0].txid')
 VOUT=$(echo $UTXO | jq -r '.[0].vout')
@@ -22,7 +21,7 @@ SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
 ##Now + 20 seconds by default
 TIME=`forwardseconds.py`
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]' $TIME)
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
 echo $TX_SIGNED
 
 # echo "Today is ("$(gdate --date 'now')") and the transaction is valid from "$(gdate --date='@'$TIME'') "\n"

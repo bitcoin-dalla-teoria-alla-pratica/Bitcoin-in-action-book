@@ -3,7 +3,7 @@
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
 
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 ADDR_MITT=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
 
@@ -11,7 +11,6 @@ bitcoin-cli generatetoaddress 102 $ADDR_MITT >> /dev/null
 
 #GET UTXO with 101 Confirmations
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]'`
-PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
 
 TXID=$(echo $UTXO | jq -r '.[0].txid')
 VOUT=$(echo $UTXO | jq -r '.[0].vout')
@@ -23,14 +22,14 @@ SEC=512
 BIN=$(512to2.py $SEC)
 SEQUENCE=`echo 'ibase=2; 0000000001000000'$BIN | bc`
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT',"sequence":'$SEQUENCE'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
 #bitcoin-cli decoderawtransaction $TX_SIGNED
 
 PREVIOUS_MEDIAN_TIME=$(bitcoin-cli getblock $(bitcoin-cli getblock $(bitcoin-cli getrawtransaction $TXID 2 | jq -r '.blockhash') | jq -r '.previousblockhash') | jq -r '.mediantime')
 MEDIANTIME_UTXO=$(bitcoin-cli getblock $(bitcoin-cli getrawtransaction $TXID 2 | jq -r '.blockhash') | jq -r '.mediantime')
 CURRENT_MEDIANTIME=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.mediantime')
 
-echo "\n- The previous block's mediantime is: "$(tohuman.py $PREVIOUS_MEDIAN_TIME )" \n- Block UTXO's mediantime is "$(tohuman.py $MEDIANTIME_UTXO)" \n- The transaction is valid after $SEC seconds. Date:"$(tohuman.py $(forwardseconds.py $SEC $MEDIANTIME_UTXO)) " \n- bestblock's mediantime" $(tohuman.py $CURRENT_MEDIANTIME)" \n"
+printf "\n \e[44m ######### The previous block's mediantime is: "$(tohuman.py $PREVIOUS_MEDIAN_TIME )" \n- Block UTXO's mediantime is "$(tohuman.py $MEDIANTIME_UTXO)" \n- The transaction is valid after $SEC seconds. Date:"$(tohuman.py $(forwardseconds.py $SEC $MEDIANTIME_UTXO)) " \n- bestblock's mediantime" $(tohuman.py $CURRENT_MEDIANTIME)" #########\e[0m\n\n"
 
 printf "\n \e[41m ######### Error #########\e[0m\n\n"
 bitcoin-cli sendrawtransaction $TX_SIGNED

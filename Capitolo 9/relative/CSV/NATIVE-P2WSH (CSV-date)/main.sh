@@ -6,16 +6,23 @@ bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && slee
 #create address
 ./create_address_p2wsh.sh
 
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bia"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"  disable_private_keys=true
+
 ADDR_MITT=`cat address_P2WSH_native.txt`
-ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
+ADDR_DEST=`bitcoin-cli -rpcwallet="bia" getnewaddress "" "bech32"`
 
+
+#mint blocks
 bitcoin-cli generatetoaddress 102 $ADDR_MITT >> /dev/null
+#to retrieve UTXO easily
+CHECKSUM=$(bitcoin-cli getdescriptorinfo "addr($ADDR_MITT)" | jq -r .checksum)
+bitcoin-cli -rpcwallet="bitcoin in action" importdescriptors '[{ "desc": "addr('$ADDR_MITT')#'$CHECKSUM'", "timestamp": "now", "internal": true }]'
 
-##Import address becuase it created "outside" bitcoin core. retrieve UTXO easily
-bitcoin-cli importaddress $ADDR_MITT
-
-UTXO=$(bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]')
+#check amount
+printf  "\n\n \e[32m ######### UTXO #########\e[0m\n\n"
+bitcoin-cli -rpcwallet="bitcoin in action" listunspent 1 101 '["'$ADDR_MITT'"]' | jq
+UTXO=$(bitcoin-cli -rpcwallet="bitcoin in action" listunspent 1 101 '["'$ADDR_MITT'"]')
 TXID=`echo $UTXO | jq -r '.[0].txid'`
 VOUT=`echo $UTXO | jq -r '.[0].vout'`
 AMOUNT_UTXO=`echo $UTXO | jq -r '.[0].amount'`

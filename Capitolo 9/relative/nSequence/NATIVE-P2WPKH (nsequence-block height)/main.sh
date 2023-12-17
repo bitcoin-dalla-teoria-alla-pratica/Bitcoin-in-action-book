@@ -2,7 +2,7 @@
 
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action" 
 
 ADDR_MITT=`bitcoin-cli getnewaddress "" "bech32"`
 ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
@@ -11,7 +11,7 @@ bitcoin-cli generatetoaddress 144  $(bitcoin-cli getnewaddress "" "bech32") >> /
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
 
 UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]'`
-PK=`bitcoin-cli dumpprivkey $ADDR_MITT`
+
 
 TXID=$(echo $UTXO | jq -r '.[0].txid')
 VOUT=$(echo $UTXO | jq -r '.[0].vout')
@@ -22,7 +22,7 @@ SCRIPTPUBKEY=$(echo $UTXO | jq -r '.[0].scriptPubKey')
 SEQUENCE_HEIGHT=1618
 
 TX_DATA=$(bitcoin-cli createrawtransaction '[{"txid":"'$TXID'","vout":'$VOUT',"sequence":'$SEQUENCE_HEIGHT'}]' '[{"'$ADDR_DEST'":'$AMOUNT'}]')
-TX_SIGNED=$(bitcoin-cli signrawtransactionwithkey $TX_DATA '["'$PK'"]' '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
+TX_SIGNED=$(bitcoin-cli signrawtransactionwithwallet $TX_DATA '[{"txid":"'$TXID'","vout":'$VOUT',"scriptPubKey":"'$SCRIPTPUBKEY'","amount":"'$TOTAL_UTXO_AMOUNT'"}]'  | jq -r '.hex')
 
 PREVIOUS_HEIGHT=$(bitcoin-cli getblock $(bitcoin-cli getblock $(bitcoin-cli getrawtransaction $TXID 2 | jq -r '.blockhash') | jq -r '.previousblockhash') | jq -r '.height')
 BEST_BLOCK_HEIGHT=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash) | jq -r '.height')

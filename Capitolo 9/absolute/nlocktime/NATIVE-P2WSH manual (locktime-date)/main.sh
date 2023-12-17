@@ -2,7 +2,7 @@
 
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"
 #create address
 ./create_address_p2wsh.sh
 
@@ -14,7 +14,10 @@ ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
 #mint blocks
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
 #to retrieve UTXO easily
-bitcoin-cli importaddress $ADDR_MITT
+PK=$(cat compressed_private_key_WIF_1.txt)
+CHECKSUM=$(bitcoin-cli getdescriptorinfo "wsh(pkh($PK))" | jq -r .checksum)
+bitcoin-cli importdescriptors '[{ "desc": "wsh(pkh('$PK'))#'"$CHECKSUM"'", "timestamp": "now", "internal": true }]'
+
 
 #check amount
 printf  "\n\n \e[32m ######### UTXO #########\e[0m\n\n"
