@@ -2,22 +2,26 @@
 
 
 bitcoin-cli stop && sleep 5 && rm -Rf $HOME/.bitcoin/regtest && bitcoind && sleep 5
-bitcoin-cli -named createwallet wallet_name="bitcoin in action" descriptors="false" >> /dev/null
+bitcoin-cli -named createwallet wallet_name="bia"
+bitcoin-cli -named createwallet wallet_name="bitcoin in action"  disable_private_keys=true
+
 ./create_address_p2sh_p2wsh_multisig.sh
 
 printf  "\n\n \e[45m ######### Mine 101 blocks and get reward#########\e[0m"
 #Get P2SH-P2WPKH-MULTISIG
 ADDR_MITT=`cat address_p2sh_p2wsh_multisig.txt`
-ADDR_DEST=`bitcoin-cli getnewaddress "" "bech32"`
+ADDR_DEST=`bitcoin-cli -rpcwallet="bia" getnewaddress "" "bech32"`
 
 bitcoin-cli generatetoaddress 101 $ADDR_MITT >> /dev/null
 #to retrieve UTXO easily
-bitcoin-cli importaddress $ADDR_MITT
+CHECKSUM=$(bitcoin-cli getdescriptorinfo "addr($ADDR_MITT)" | jq -r .checksum)
+bitcoin-cli -rpcwallet="bitcoin in action" importdescriptors '[{ "desc": "addr('$ADDR_MITT')#'$CHECKSUM'", "timestamp": "now", "internal": true }]'
+
 
 #check amount
 printf  "\n\n \e[32m ######### UTXO #########\e[0m\n\n"
-bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]' | jq
-UTXO=`bitcoin-cli listunspent 1 101 '["'$ADDR_MITT'"]'`
+bitcoin-cli -rpcwallet="bitcoin in action" listunspent 1 101 '["'$ADDR_MITT'"]' | jq
+UTXO=$(bitcoin-cli -rpcwallet="bitcoin in action" listunspent 1 101 '["'$ADDR_MITT'"]')
 
 TXID=`echo $UTXO | jq -r '.[0].txid'`
 VOUT=`echo $UTXO | jq -r '.[0].vout'`
