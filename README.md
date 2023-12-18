@@ -1,7 +1,7 @@
 # Bitcoin In Action
 ## SegWit, Bitcoin Script & Smart Contracts
 
-Benvenuto in **Bitcoin In Action**, la tua guida pratica per esplorare le ultime innovazioni di Bitcoin. Questo non è solo un libro; è un viaggio attraverso l'aggiornamento di Bitcoin SegWit e il coinvolgente mondo del linguaggio di programmazione Bitcoin Script.
+Benvenuto in **Bitcoin In Action**, la tua guida pratica per esplorare Bitcoin. Questo non è solo un libro; è un viaggio attraverso l'aggiornamento di Bitcoin SegWit e il coinvolgente mondo del linguaggio di programmazione Bitcoin Script.
 
 ## Cosa Troverai Qui
 
