@@ -1,4 +1,3 @@
-```markdown
 # Bitcoin In Action
 ## SegWit, Bitcoin Script & Smart Contracts
 
@@ -42,5 +41,3 @@ Allora [dai un'occhiata alle linee guida per contribuire](CONTRIBUTING.md)
 - 🧵 [**Threads**](https://www.threads.net/@satoshiwantsyou) 
 - ✉️ [Email](mailto:corsobitcoin@gmail.com)
 - 👨‍💼 [Alessio Barnini](https://www.linkedin.com/in/alessiobarnini/)
-
-```
