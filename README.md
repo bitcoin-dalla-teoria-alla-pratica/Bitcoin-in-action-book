@@ -9,7 +9,7 @@ Benvenuto in **Bitcoin In Action**, la tua guida pratica per esplorare Bitcoin. 
   
 ## Sequel Indispensabile
 
-Questo libro è il sequel di [Bitcoin – Dalla teoria alla pratica](https://github.com/bitcoin-dalla-teoria-alla-pratica/errata-corrige-e-sorgente-esempi), ed è indispensabile per chi vuole seguire Bitcoin In Action. Vogliamo rimanere ancora a guardare?
+Questo libro è il sequel di [Bitcoin – Dalla teoria alla pratica](https://github.com/bitcoin-dalla-teoria-alla-pratica/errata-corrige-e-sorgente-esempi), ed è indispensabile per chi vuole seguire Bitcoin In Action.
 
 ![Copertina del libro su YouTube](https://i.ibb.co/PMLtdJf/Copertina-Youtube.png)
 
