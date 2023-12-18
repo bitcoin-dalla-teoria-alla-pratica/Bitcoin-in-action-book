@@ -1,12 +1,12 @@
 # Bitcoin In Action
 ## SegWit, Bitcoin Script & Smart Contracts
 
-Benvenuto in **Bitcoin In Action**, la tua guida pratica per esplorare Bitcoin. Questo non è solo un libro; è un viaggio attraverso l'aggiornamento di Bitcoin SegWit e il coinvolgente mondo del linguaggio di programmazione Bitcoin Script.
+Benvenuto in **Bitcoin In Action**, la tua guida pratica per esplorare Bitcoin. Questo non è solo un libro; è un viaggio attraverso l'aggiornamento di Bitcoin SegWit e del linguaggio di programmazione Bitcoin Script.
 
 ## Cosa Troverai Qui
 
-- **Teoria e Pratica:** Alza il cofano di Bitcoin, controlla ogni singolo bit e accendi la macchina per vedere come funziona davvero. Con il nostro libro, non solo apprenderai la teoria dietro Bitcoin, ma avrai l'opportunità di replicare ogni esempio pratico con il supporto di file appositamente preparati dagli autori. È il momento di immergerti nel mondo di "programmable money" di cui tutti parlano, ma che pochi riescono a spiegare.
-
+- **Teoria e Pratica:** Alza il cofano di Bitcoin, controlla ogni singolo bit e accendi la macchina per vedere come funziona davvero. Con il nostro libro, non solo apprenderai la teoria dietro Bitcoin, ma avrai l'opportunità di replicare ogni esempio pratico con il supporto di file appositamente preparati. 
+  
 ## Sequel Indispensabile
 
 Questo libro è il sequel di [Bitcoin – Dalla teoria alla pratica](https://github.com/bitcoin-dalla-teoria-alla-pratica/errata-corrige-e-sorgente-esempi), ed è indispensabile per chi vuole seguire Bitcoin In Action. Vogliamo rimanere ancora a guardare?
