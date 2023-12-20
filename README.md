@@ -27,6 +27,12 @@ Il Libro è disponibile su:
 ## Come replicare facilmente gli esempi?
 Puoi clonare il repository [Docker Bitcoin](https://github.com/bitcoin-dalla-teoria-alla-pratica/Docker-bitcoin)
 
+## Utilizzo dei Descriptor
+
+Se sei interessato a utilizzare i descriptor in Bitcoin, ti consigliamo di dare un'occhiata al branch specifico: [Descriptor Branch](https://github.com/bitcoin-dalla-teoria-alla-pratica/Bitcoin-in-action-book/tree/descriptor?tab=readme-ov-file).
+
+Questo branch è dedicato all'implementazione e all'uso di descriptor, offrendo una risorsa preziosa per chi desidera approfondire questo aspetto di Bitcoin. Sentiti libero di esplorare il branch e trovare risorse utili per il tuo apprendimento!
+
 ## Ho trovato un errore!
 
 Allora [dai un'occhiata alle linee guida per contribuire](CONTRIBUTING.md)
